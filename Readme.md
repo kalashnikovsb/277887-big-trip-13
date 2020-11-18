@@ -1,7 +1,7 @@
 # Проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алексей Калашников](https://up.htmlacademy.ru/ecmascript/13/user/277887).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Глазков](https://htmlacademy.ru/profile/id1194253).
 
 ---
 

@@ -1,32 +1,31 @@
-import {tripInformation} from "./view/tripInformation.js";
-import {menu} from "./view/menu.js";
-import {filters} from "./view/filters.js";
-import {sorting} from "./view/sorting.js";
-import {eventsList} from "./view/eventsList.js";
-import {eventEditItem} from "./view/eventEditItem.js";
-import {eventItem} from "./view/eventItem.js";
+import {EVENTS_COUNT} from "./const.js";
+import {render} from "./utils/renderUtils.js";
+import {tripInformationView} from "./view/tripInformationView.js";
+import {menuView} from "./view/menuView.js";
+import {filtersView} from "./view/filtersView.js";
+import {sortingView} from "./view/sortingView.js";
+import {eventsListView} from "./view/eventsListView.js";
+import {eventEditItemView} from "./view/eventEditItemView.js";
+import {eventItemView} from "./view/eventItemView.js";
+import {generateEventsMock} from "./mock/generateEventsMock.js";
 
-const EVENTS_COUNT = 3;
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+const events = new Array(EVENTS_COUNT).fill().map(generateEventsMock);
 
 const tripHeaderElement = document.querySelector(`.trip-main`);
 const menuHeaderElement = document.querySelector(`.trip-main__trip-controls .visually-hidden:nth-of-type(1)`);
 const filtersHeaderElement = document.querySelector(`.trip-main__trip-controls .visually-hidden:nth-of-type(2)`);
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-render(tripHeaderElement, tripInformation(), `afterbegin`);
-render(menuHeaderElement, menu(), `afterend`);
-render(filtersHeaderElement, filters(), `afterend`);
-render(tripEventsElement, sorting(), `beforeend`);
-render(tripEventsElement, eventsList(), `beforeend`);
+render(tripHeaderElement, tripInformationView(events), `afterbegin`);
+render(menuHeaderElement, menuView(), `afterend`);
+render(filtersHeaderElement, filtersView(), `afterend`);
+render(tripEventsElement, sortingView(), `beforeend`);
+render(tripEventsElement, eventsListView(), `beforeend`);
 
 const eventsListElement = document.querySelector(`.trip-events__list`);
 
-render(eventsListElement, eventEditItem(), `beforeend`);
+render(eventsListElement, eventEditItemView(), `beforeend`);
 
-for (let i = 0; i < EVENTS_COUNT; i++) {
-  render(eventsListElement, eventItem(), `beforeend`);
+for (let i = 1; i < events.length; i++) {
+  render(eventsListElement, events[i], `beforeend`);
 }

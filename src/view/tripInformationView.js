@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import {sortTimeEndUp} from "../utils/eventsUtils.js";
+
 
 const getDestinations = (events) => {
   if (events.length === 0) {
@@ -8,21 +10,36 @@ const getDestinations = (events) => {
   for (let item of events) {
     destinations.push(item.destination);
   }
-  const uniqueDestinations = new Set(destinations);
-  return Array.from(uniqueDestinations).join(` &mdash; `);
+  const unique = Array.from(new Set(destinations));
+  switch (unique.length) {
+    case 0:
+      return ``;
+    case 1:
+      return unique[0];
+    case 2:
+      return unique.join(` &mdash; `);
+    default:
+      return `${unique[0]} &mdash; ... &mdash; ${unique[unique.length - 1]}`;
+  }
 };
+
 
 const getTripDates = (events) => {
   let eventsCopy = events.slice();
-  eventsCopy.sort(sortingTimeUp);
-  const startDate = dayjs(eventsCopy[0].timeStart).format(`MMM DD`);
-  const endDate = dayjs(eventsCopy[eventsCopy.length - 1].timeEnd).format(`DD`);
+  eventsCopy.sort(sortTimeEndUp);
+  let startDate = dayjs(eventsCopy[0].timeStart);
+  let endDate = dayjs(eventsCopy[eventsCopy.length - 1].timeEnd);
+
+  if (startDate.month() === endDate.month()) {
+    endDate = endDate.format(`DD`);
+  } else {
+    endDate = endDate.format(`MMM DD`);
+  }
+  startDate = startDate.format(`MMM DD`);
+
   return `${startDate}&nbsp;&mdash;&nbsp;${endDate}`;
 };
 
-const sortingTimeUp = (eventA, eventB) => {
-  return eventA.timeEnd.getTime() - eventB.timeEnd.getTime();
-};
 
 export const tripInformationView = (events) => {
   return `

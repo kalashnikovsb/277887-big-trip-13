@@ -7,7 +7,6 @@ import {
   MAX_OPTIONS_COUNT,
   MIN_PHOTOS_COUNT,
   MAX_PHOTOS_COUNT,
-  PHOTO_URL,
   DESTINATIONS,
   DESCRIPTIONS,
   OPTIONS,
@@ -15,8 +14,9 @@ import {
 import {getRandomInteger, getRandomArrayElement, getRandomSubArray} from "../utils/commonUtils.js";
 import dayjs from "dayjs";
 
+// Прибавляет к текущему времени от -7 до 7 дней и от -30 до 30 минут
 const generateTimeStart = () => {
-  let timeStart = dayjs().add(getRandomInteger(-DAYS_GAP, DAYS_GAP), `day`);
+  let timeStart = dayjs().add(getRandomInteger(-DAYS_GAP, DAYS_GAP), `day`).add(getRandomInteger(-30, 30), `minute`);
   return timeStart.toDate();
 };
 
@@ -28,13 +28,22 @@ const generateTimeEnd = (timeStart) => {
   return timeEnd.toDate();
 };
 
+const generatePhotos = () => {
+  let count = getRandomInteger(MIN_PHOTOS_COUNT, MAX_PHOTOS_COUNT);
+  let photosList = [];
+  while (count--) {
+    photosList.push(`http://picsum.photos/248/152?r=${Math.random()}`);
+  }
+  return photosList;
+};
+
 export const generateEventsMock = () => {
   const type = getRandomArrayElement(TYPES);
   const destination = getRandomArrayElement(DESTINATIONS);
   const description = getRandomSubArray(DESCRIPTIONS, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH).join(` `);
   const options = getRandomSubArray(OPTIONS, MIN_OPTIONS_COUNT, MAX_OPTIONS_COUNT);
   const price = getRandomInteger(10, 100);
-  const photos = getRandomSubArray([PHOTO_URL], MIN_PHOTOS_COUNT, MAX_PHOTOS_COUNT);
+  const photos = generatePhotos();
   const timeStart = generateTimeStart();
   const timeEnd = generateTimeEnd(timeStart);
   const isFavorite = Boolean(getRandomInteger(0, 1));

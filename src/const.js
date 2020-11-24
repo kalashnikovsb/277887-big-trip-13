@@ -7,7 +7,6 @@ const MIN_OPTIONS_COUNT = 0;
 const MAX_OPTIONS_COUNT = 5;
 const MIN_PHOTOS_COUNT = 0;
 const MAX_PHOTOS_COUNT = 10;
-const PHOTO_URL = `http://picsum.photos/248/152?r=${Math.random()}`;
 const DESTINATIONS = [
   `Moscow`,
   `Khabarovsk`,
@@ -30,16 +29,16 @@ const DESCRIPTIONS = [
   `In rutrum ac purus sit amet tempus.`
 ];
 const OPTIONS = [
-  {name: `Add luggage`, price: 50},
-  {name: `Switch to Comfort`, price: 80},
-  {name: `Add meal`, price: 15},
-  {name: `Choose seats`, price: 5},
-  {name: `Travel by train`, price: 40},
-  {name: `Order Uber`, price: 20},
-  {name: `Rent a car`, price: 200},
-  {name: `Add breakfast`, price: 50},
-  {name: `Book tickets`, price: 40},
-  {name: `Lunch in city`, price: 30},
+  {name: `Add luggage`, price: 50, id: `luggage`},
+  {name: `Switch to Comfort`, price: 80, id: `comfort`},
+  {name: `Add meal`, price: 15, id: `meal`},
+  {name: `Choose seats`, price: 5, id: `seats`},
+  {name: `Travel by train`, price: 40, id: `train`},
+  {name: `Order Uber`, price: 20, id: `uber`},
+  {name: `Rent a car`, price: 200, id: `car`},
+  {name: `Add breakfast`, price: 50, id: `breakfast`},
+  {name: `Book tickets`, price: 40, id: `tickets`},
+  {name: `Lunch in city`, price: 30, id: `linch`},
 ];
 
 export {
@@ -52,7 +51,6 @@ export {
   MAX_OPTIONS_COUNT,
   MIN_PHOTOS_COUNT,
   MAX_PHOTOS_COUNT,
-  PHOTO_URL,
   DESTINATIONS,
   DESCRIPTIONS,
   OPTIONS,

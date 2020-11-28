@@ -1,38 +1,25 @@
-import {TYPES, DESTINATIONS, OPTIONS} from "../const.js";
+import {TYPES, DESTINATIONS, OPTIONS, EMPTY_EVENT} from "../const.js";
+import {createElement} from "../utils/renderUtils.js";
 import dayjs from "dayjs";
-
-const emptyEvent = {
-  type: ``,
-  destination: ``,
-  description: ``,
-  options: [],
-  price: ``,
-  photos: [],
-  timeStart: new Date(),
-  timeEnd: new Date(),
-  isFavorite: false,
-};
 
 
 const getType = (type) => {
-  return (type.length === 0) ? TYPES[0] : type;
+  return (!type) ? TYPES[0] : type;
 };
 
 
 const getDestination = (destination) => {
-  return (destination.length === 0) ? DESTINATIONS[0] : destination;
+  return (!destination) ? DESTINATIONS[0] : destination;
 };
 
 
 const getEventTypesList = () => {
-  return `
-  <div class="event__type-list">
+  return `<div class="event__type-list">
     <fieldset class="event__type-group">
       <legend class="visually-hidden">Event type</legend>
   ${TYPES.map((type) => {
     type = type.toLowerCase();
-    return `
-    <div class="event__type-item">
+    return `<div class="event__type-item">
       <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
     </div>`;
@@ -43,8 +30,7 @@ const getEventTypesList = () => {
 
 
 const getDestinationsList = () => {
-  return `
-  <datalist id="destination-list-1">
+  return `<datalist id="destination-list-1">
   ${DESTINATIONS.map((destination) => {
     return `<option value="${destination}"></option>`;
   }).join(``)}
@@ -54,19 +40,17 @@ const getDestinationsList = () => {
 
 
 const getOptionsList = (options) => {
-  if (options.length === 0) {
+  if (!options.length === 0) {
     return ``;
   }
-  return `
-  <section class="event__section  event__section--offers">
+  return `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
   ${OPTIONS.map((constOption) => {
     const isChecked = options.some((option) => {
       return (option.name === constOption.name) ? true : false;
     });
-    return `
-    <div class="event__offer-selector">
+    return `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.id}-1" type="checkbox" name="event-offer-${constOption.id}" ${isChecked ? `checked` : ``}>
       <label class="event__offer-label" for="event-offer-${constOption.id}-1">
         <span class="event__offer-title">${constOption.name}</span>
@@ -84,8 +68,7 @@ const getPhotos = (photos) => {
   if (photos.length === 0) {
     return ``;
   }
-  return `
-  <div class="event__photos-container">
+  return `<div class="event__photos-container">
     <div class="event__photos-tape">
   ${photos.map((src) => {
     return `<img class="event__photo" src="${src}" alt="Event photo">`;
@@ -97,11 +80,10 @@ const getPhotos = (photos) => {
 
 
 const getDescription = (description, photos) => {
-  if (description.length === 0) {
+  if (!description) {
     return ``;
   } else {
-    return `
-    <section class="event__section  event__section--destination">
+    return `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${description}</p>
       ${getPhotos(photos)}
@@ -110,11 +92,10 @@ const getDescription = (description, photos) => {
 };
 
 
-export const eventEditItemView = (event = emptyEvent) => {
+const getEventEditTemplate = (event) => {
   const {type, destination, timeStart, timeEnd, price, options, description, photos} = event;
 
-  return `
-  <li class="trip-events__item">
+  return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
@@ -163,3 +144,26 @@ export const eventEditItemView = (event = emptyEvent) => {
     </form>
   </li>`;
 };
+
+
+export default class EventEditView {
+  constructor(event = EMPTY_EVENT) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return getEventEditTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

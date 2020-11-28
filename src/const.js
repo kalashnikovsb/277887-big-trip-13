@@ -7,6 +7,7 @@ const MIN_OPTIONS_COUNT = 0;
 const MAX_OPTIONS_COUNT = 5;
 const MIN_PHOTOS_COUNT = 0;
 const MAX_PHOTOS_COUNT = 10;
+
 const DESTINATIONS = [
   `Moscow`,
   `Khabarovsk`,
@@ -15,6 +16,7 @@ const DESTINATIONS = [
   `Irkutsk`,
   `Saint-Petersburg`,
 ];
+
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -28,6 +30,7 @@ const DESCRIPTIONS = [
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`
 ];
+
 const OPTIONS = [
   {name: `Add luggage`, price: 50, id: `luggage`},
   {name: `Switch to Comfort`, price: 80, id: `comfort`},
@@ -40,6 +43,25 @@ const OPTIONS = [
   {name: `Book tickets`, price: 40, id: `tickets`},
   {name: `Lunch in city`, price: 30, id: `linch`},
 ];
+
+const RENDER_POSITION = {
+  BEFOREBEGIN: `beforebegin`,
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
+};
+
+const EMPTY_EVENT = {
+  type: ``,
+  destination: ``,
+  description: ``,
+  options: [],
+  price: ``,
+  photos: [],
+  timeStart: new Date(),
+  timeEnd: new Date(),
+  isFavorite: false,
+};
 
 export {
   EVENTS_COUNT,
@@ -54,4 +76,6 @@ export {
   DESTINATIONS,
   DESCRIPTIONS,
   OPTIONS,
+  RENDER_POSITION,
+  EMPTY_EVENT,
 };

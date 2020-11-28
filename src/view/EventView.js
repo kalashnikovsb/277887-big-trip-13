@@ -1,4 +1,5 @@
 import {getDuration} from "../utils/renderUtils.js";
+import {createElement} from "../utils/renderUtils.js";
 import dayjs from "dayjs";
 
 
@@ -10,8 +11,7 @@ const getDateTemplate = (time) => {
 const getSchedule = (timeStart, timeEnd) => {
   timeStart = dayjs(timeStart);
   timeEnd = dayjs(timeEnd);
-  return `
-  <div class="event__schedule">
+  return `<div class="event__schedule">
     <p class="event__time">
       <time class="event__start-time" datetime="${timeStart.format(`YYYY-MM-DDTHH:mm`)}">${timeStart.format(`HH:mm`)}</time>
       &mdash;
@@ -23,11 +23,9 @@ const getSchedule = (timeStart, timeEnd) => {
 
 
 const getOptions = (options) => {
-  return `
-  <ul class="event__selected-offers">
+  return `<ul class="event__selected-offers">
     ${options.map((option) => {
-    return `
-    <li class="event__offer">
+    return `<li class="event__offer">
       <span class="event__offer-title">${option.name}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${option.price}</span>
@@ -42,11 +40,9 @@ const getFavoriteClassName = (isFavorite) => {
 };
 
 
-export const eventItemView = (event) => {
+const getEventTemplate = (event) => {
   const {type, timeStart, timeEnd, destination, price, options, isFavorite} = event;
-
-  return `
-  <li class="trip-events__item">
+  return `<li class="trip-events__item">
     <div class="event">
       ${getDateTemplate(timeStart)}
       <div class="event__type">
@@ -71,3 +67,26 @@ export const eventItemView = (event) => {
     </div>
   </li>`;
 };
+
+
+export default class EventView {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return getEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

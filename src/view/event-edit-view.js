@@ -1,15 +1,15 @@
 import {TYPES, DESTINATIONS, OPTIONS, EMPTY_EVENT} from "../const.js";
-import {createElement} from "../utils/renderUtils.js";
+import {createElement} from "../utils/render-utils.js";
 import dayjs from "dayjs";
 
 
 const getType = (type) => {
-  return (!type) ? TYPES[0] : type;
+  return type || TYPES[0];
 };
 
 
 const getDestination = (destination) => {
-  return (!destination) ? DESTINATIONS[0] : destination;
+  return destination || DESTINATIONS[0];
 };
 
 
@@ -40,7 +40,7 @@ const getDestinationsList = () => {
 
 
 const getOptionsList = (options) => {
-  if (!options.length === 0) {
+  if (options.length === 0) {
     return ``;
   }
   return `<section class="event__section  event__section--offers">
@@ -80,7 +80,7 @@ const getPhotos = (photos) => {
 
 
 const getDescription = (description, photos) => {
-  if (!description) {
+  if (description.length === 0) {
     return ``;
   } else {
     return `<section class="event__section  event__section--destination">

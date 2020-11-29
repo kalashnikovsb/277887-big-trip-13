@@ -1,14 +1,14 @@
 import {EVENTS_COUNT, RENDER_POSITION} from "./const.js";
-import {render} from "./utils/renderUtils.js";
-import {sortTimeStartUp} from "./utils/eventsUtils.js";
-import {generateEventsMock} from "./mock/generateEventsMock.js";
-import TripInformationView from "./view/TripInformationView.js";
-import MenuView from "./view/MenuView.js";
-import FiltersView from "./view/FiltersView.js";
-import SortingView from "./view/SortingView.js";
-import EventsListView from "./view/EventsListView.js";
-import EventEditView from "./view/EventEditView.js";
-import EventView from "./view/EventView.js";
+import {render} from "./utils/render-utils.js";
+import {sortTimeStartUp} from "./utils/events-utils.js";
+import {generateEventsMock} from "./mock/generate-events-mock.js";
+import TripInformationView from "./view/trip-information-view.js";
+import MenuView from "./view/menu-view.js";
+import FiltersView from "./view/filters-view.js";
+import SortingView from "./view/sorting-view.js";
+import EventsListView from "./view/events-list-view.js";
+import EventEditView from "./view/event-edit-view.js";
+import EventView from "./view/event-view.js";
 
 
 const renderEvent = (container, item) => {

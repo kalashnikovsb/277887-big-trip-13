@@ -1,5 +1,4 @@
-import {getDuration} from "../utils/renderUtils.js";
-import {createElement} from "../utils/renderUtils.js";
+import {getDuration, createElement} from "../utils/render-utils.js";
 import dayjs from "dayjs";
 
 

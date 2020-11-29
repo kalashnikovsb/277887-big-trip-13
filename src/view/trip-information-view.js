@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import {sortTimeEndUp} from "../utils/eventsUtils.js";
-import {createElement} from "../utils/renderUtils.js";
+import {sortTimeEndUp} from "../utils/events-utils.js";
+import {createElement} from "../utils/render-utils.js";
 
 
 const getDestinations = (events) => {

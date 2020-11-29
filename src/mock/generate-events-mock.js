@@ -11,7 +11,7 @@ import {
   DESCRIPTIONS,
   OPTIONS,
 } from "../const.js";
-import {getRandomInteger, getRandomElement, getRandomItems} from "../utils/commonUtils.js";
+import {getRandomInteger, getRandomElement, getRandomItems} from "../utils/common-utils.js";
 import dayjs from "dayjs";
 
 // Прибавляет к текущему времени от -7 до 7 дней и от -30 до 30 минут

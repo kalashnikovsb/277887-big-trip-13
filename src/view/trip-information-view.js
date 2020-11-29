@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
-import {sortTimeEndUp} from "../utils/eventsUtils.js";
+import {sortTimeEndUp} from "../utils/events-utils.js";
+import {createElement} from "../utils/render-utils.js";
 
 
 const getDestinations = (events) => {
@@ -25,8 +26,13 @@ const getDestinations = (events) => {
 
 
 const getTripDates = (events) => {
+  if (events.length === 0) {
+    return ``;
+  }
+
   let eventsCopy = events.slice();
   eventsCopy.sort(sortTimeEndUp);
+
   let startDate = dayjs(eventsCopy[0].timeStart);
   let endDate = dayjs(eventsCopy[eventsCopy.length - 1].timeEnd);
 
@@ -41,9 +47,8 @@ const getTripDates = (events) => {
 };
 
 
-export const tripInformationView = (events) => {
-  return `
-  <section class="trip-main__trip-info  trip-info">
+const getTripInformationTemplate = (events) => {
+  return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">${getDestinations(events)}</h1>
 
@@ -55,3 +60,26 @@ export const tripInformationView = (events) => {
     </p>
   </section>`;
 };
+
+export default class TripInformationView {
+  constructor(events) {
+    this._element = null;
+    this._events = events;
+  }
+
+  getTemplate() {
+    return getTripInformationTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

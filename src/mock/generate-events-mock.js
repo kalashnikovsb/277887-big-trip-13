@@ -11,7 +11,7 @@ import {
   DESCRIPTIONS,
   OPTIONS,
 } from "../const.js";
-import {getRandomInteger, getRandomArrayElement, getRandomSubArray} from "../utils/commonUtils.js";
+import {getRandomInteger, getRandomElement, getRandomItems} from "../utils/common-utils.js";
 import dayjs from "dayjs";
 
 // Прибавляет к текущему времени от -7 до 7 дней и от -30 до 30 минут
@@ -38,10 +38,10 @@ const generatePhotos = () => {
 };
 
 export const generateEventsMock = () => {
-  const type = getRandomArrayElement(TYPES);
-  const destination = getRandomArrayElement(DESTINATIONS);
-  const description = getRandomSubArray(DESCRIPTIONS, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH).join(` `);
-  const options = getRandomSubArray(OPTIONS, MIN_OPTIONS_COUNT, MAX_OPTIONS_COUNT);
+  const type = getRandomElement(TYPES);
+  const destination = getRandomElement(DESTINATIONS);
+  const description = getRandomItems(DESCRIPTIONS, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH).join(` `);
+  const options = getRandomItems(OPTIONS, MIN_OPTIONS_COUNT, MAX_OPTIONS_COUNT);
   const price = getRandomInteger(10, 100);
   const photos = generatePhotos();
   const timeStart = generateTimeStart();

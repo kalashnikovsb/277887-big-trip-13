@@ -26,8 +26,13 @@ const getDestinations = (events) => {
 
 
 const getTripDates = (events) => {
+  if (events.length === 0) {
+    return ``;
+  }
+
   let eventsCopy = events.slice();
   eventsCopy.sort(sortTimeEndUp);
+
   let startDate = dayjs(eventsCopy[0].timeStart);
   let endDate = dayjs(eventsCopy[eventsCopy.length - 1].timeEnd);
 

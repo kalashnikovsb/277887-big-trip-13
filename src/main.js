@@ -90,5 +90,5 @@ render(filtersHeaderElement, filtersComponent.getElement(), RENDER_POSITION.AFTE
 if (eventsSortedByTime.length === 0) {
   renderAddNewNotification();
 } else {
-  renderBoard(eventsSortedByTime);
+  renderBoard(eventsSortedByTime) ;
 }

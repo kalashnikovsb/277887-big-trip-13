@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import {sortTimeEndUp} from "../utils/events-utils.js";
-import {createElement} from "../utils/render-utils.js";
+import AbstractView from "./abstract-view.js";
 
 
 const getDestinations = (events) => {
@@ -61,25 +61,14 @@ const getTripInformationTemplate = (events) => {
   </section>`;
 };
 
-export default class TripInformationView {
+
+export default class TripInformationView extends AbstractView {
   constructor(events) {
-    this._element = null;
+    super();
     this._events = events;
   }
 
   getTemplate() {
     return getTripInformationTemplate(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

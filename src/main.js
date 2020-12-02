@@ -1,5 +1,5 @@
 import {EVENTS_COUNT, RENDER_POSITION} from "./const.js";
-import {render} from "./utils/render-utils.js";
+import {render, replace} from "./utils/render-utils.js";
 import {sortTimeStartUp} from "./utils/events-utils.js";
 import {generateEventsMock} from "./mock/generate-events-mock.js";
 import TripInformationView from "./view/trip-information-view.js";
@@ -11,54 +11,46 @@ import EventEditView from "./view/event-edit-view.js";
 import EventView from "./view/event-view.js";
 import EmptyEventsListView from "./view/empty-events-list-view.js";
 
+
 const renderEvent = (container, task) => {
   const eventComponent = new EventView(task);
   const eventEditComponent = new EventEditView(task);
 
-  const replaceEventToEdit = () => {
-    container.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
-  };
-
-  const replaceEditToEvent = () => {
-    container.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
-  };
-
-  const onEscKeyDown = (evt) => {
+  const escKeyDownHandler = (evt) => {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      replaceEditToEvent();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      replace(eventComponent, eventEditComponent);
+      document.removeEventListener(`keydown`, escKeyDownHandler);
     }
   };
 
-  eventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    replaceEventToEdit();
-    document.addEventListener(`keydown`, onEscKeyDown);
+  eventComponent.setEventOpenClickHandler(() => {
+    replace(eventEditComponent, eventComponent);
+    document.addEventListener(`keydown`, escKeyDownHandler);
   });
 
-  eventEditComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    replaceEditToEvent();
-    document.removeEventListener(`keydown`, onEscKeyDown);
+  eventEditComponent.setEventEditCloseClickHandler(() => {
+    replace(eventComponent, eventEditComponent);
+    document.removeEventListener(`keydown`, escKeyDownHandler);
   });
 
-  eventEditComponent.getElement().querySelector(`.event--edit`).addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
-    replaceEditToEvent();
-    document.removeEventListener(`keydown`, onEscKeyDown);
+  eventEditComponent.setEventEditSubmitHandler(() => {
+    replace(eventComponent, eventEditComponent);
+    document.removeEventListener(`keydown`, escKeyDownHandler);
   });
 
-  render(container, eventComponent.getElement(), RENDER_POSITION.BEFOREEND);
+  render(container, eventComponent, RENDER_POSITION.BEFOREEND);
 };
+
 
 const renderBoard = (tasks) => {
   const tripInformationComponent = new TripInformationView(eventsSortedByTime);
   const sortingComponent = new SortingView();
   const eventsListComponent = new EventsListView();
-  render(tripHeaderElement, tripInformationComponent.getElement(), RENDER_POSITION.AFTERBEGIN);
-  render(tripEventsElement, sortingComponent.getElement(), RENDER_POSITION.BEFOREEND);
-  render(tripEventsElement, eventsListComponent.getElement(), RENDER_POSITION.BEFOREEND);
+
+  render(tripHeaderElement, tripInformationComponent, RENDER_POSITION.AFTERBEGIN);
+  render(tripEventsElement, sortingComponent, RENDER_POSITION.BEFOREEND);
+  render(tripEventsElement, eventsListComponent, RENDER_POSITION.BEFOREEND);
 
   const eventsListElement = document.querySelector(`.trip-events__list`);
   for (let item of tasks) {
@@ -66,11 +58,13 @@ const renderBoard = (tasks) => {
   }
 };
 
+
 const renderAddNewNotification = () => {
   const emptyEventsListComponent = new EmptyEventsListView();
-  render(tripEventsElement, emptyEventsListComponent.getElement(), RENDER_POSITION.BEFOREEND);
+  render(tripEventsElement, emptyEventsListComponent, RENDER_POSITION.BEFOREEND);
   return;
 };
+
 
 const events = new Array(EVENTS_COUNT).fill().map(generateEventsMock);
 const eventsCopy = events.slice();
@@ -82,10 +76,10 @@ const filtersHeaderElement = document.querySelector(`.trip-main__trip-controls .
 const tripEventsElement = document.querySelector(`.trip-events`);
 
 const menuComponent = new MenuView();
-const filtersComponent = new FiltersView();
+const filtersComponent = new FiltersView(eventsSortedByTime.length);
 
-render(menuHeaderElement, menuComponent.getElement(), RENDER_POSITION.AFTEREND);
-render(filtersHeaderElement, filtersComponent.getElement(), RENDER_POSITION.AFTEREND);
+render(menuHeaderElement, menuComponent, RENDER_POSITION.AFTEREND);
+render(filtersHeaderElement, filtersComponent, RENDER_POSITION.AFTEREND);
 
 if (eventsSortedByTime.length === 0) {
   renderAddNewNotification();

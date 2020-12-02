@@ -1,5 +1,6 @@
-import {getDuration, createElement} from "../utils/render-utils.js";
+import {getDuration} from "../utils/render-utils.js";
 import dayjs from "dayjs";
+import AbstractView from "./abstract-view.js";
 
 
 const getDateTemplate = (time) => {
@@ -68,24 +69,24 @@ const getEventTemplate = (event) => {
 };
 
 
-export default class EventView {
+export default class EventView extends AbstractView {
   constructor(event) {
-    this._element = null;
+    super();
     this._event = event;
+    this._eventOpenClickHandler = this._eventOpenClickHandler.bind(this);
   }
 
   getTemplate() {
     return getEventTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _eventOpenClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setEventOpenClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._eventOpenClickHandler);
   }
 }

@@ -1,6 +1,6 @@
 import {TYPES, DESTINATIONS, OPTIONS, EMPTY_EVENT} from "../const.js";
-import {createElement} from "../utils/render-utils.js";
 import dayjs from "dayjs";
+import AbstractView from "./abstract-view.js";
 
 
 const getType = (type) => {
@@ -146,24 +146,35 @@ const getEventEditTemplate = (event) => {
 };
 
 
-export default class EventEditView {
+export default class EventEditView extends AbstractView {
   constructor(event = EMPTY_EVENT) {
-    this._element = null;
+    super();
     this._event = event;
+    this._eventEditCloseClickHandler = this._eventEditCloseClickHandler.bind(this);
+    this._eventEditSubmitHandler = this._eventEditSubmitHandler.bind(this);
   }
 
   getTemplate() {
     return getEventEditTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _eventEditCloseClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setEventEditCloseClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._eventEditCloseClickHandler);
+  }
+
+  _eventEditSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  setEventEditSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._eventEditSubmitHandler);
   }
 }

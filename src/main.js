@@ -9,7 +9,7 @@ import SortingView from "./view/sorting-view.js";
 import EventsListView from "./view/events-list-view.js";
 import EventEditView from "./view/event-edit-view.js";
 import EventView from "./view/event-view.js";
-import EmptyEventsListView from "./view/empty-events-list-view.js";
+import NoEventsNotice from "./view/no-events-notice-view.js";
 
 
 const renderEvent = (container, task) => {
@@ -60,8 +60,8 @@ const renderBoard = (tasks) => {
 
 
 const renderAddNewNotification = () => {
-  const emptyEventsListComponent = new EmptyEventsListView();
-  render(tripEventsElement, emptyEventsListComponent, RENDER_POSITION.BEFOREEND);
+  const noEventsNoticeComponent = new NoEventsNotice();
+  render(tripEventsElement, noEventsNoticeComponent, RENDER_POSITION.BEFOREEND);
   return;
 };
 

@@ -158,6 +158,8 @@ export default class EventEditView extends AbstractView {
     return getEventEditTemplate(this._event);
   }
 
+
+  // Закрытие формы редактирования
   _eventEditCloseClickHandler(evt) {
     evt.preventDefault();
     this._callback.click();
@@ -168,13 +170,15 @@ export default class EventEditView extends AbstractView {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._eventEditCloseClickHandler);
   }
 
+
+  // Отправка формы
   _eventEditSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit();
+    this._callback.formSubmit(this._event);
   }
 
-  setEventEditSubmitHandler(callback) {
-    this._callback.submit = callback;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
     this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._eventEditSubmitHandler);
   }
 }

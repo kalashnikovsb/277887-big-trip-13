@@ -63,6 +63,11 @@ const EMPTY_EVENT = {
   isFavorite: false,
 };
 
+const MODE = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`,
+};
+
 export {
   EVENTS_COUNT,
   DAYS_GAP,
@@ -78,4 +83,5 @@ export {
   OPTIONS,
   RENDER_POSITION,
   EMPTY_EVENT,
+  MODE
 };

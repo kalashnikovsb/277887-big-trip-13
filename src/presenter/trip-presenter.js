@@ -1,6 +1,7 @@
-import {RENDER_POSITION} from "../const.js";
+import {RENDER_POSITION, SortType} from "../const.js";
 import {render} from "../utils/render-utils.js";
 import {updateItem} from "../utils/common-utils.js";
+import {sortPriceDown, sortTimeDown} from "../utils/events-utils.js";
 import TripInformationView from "../view/trip-information-view.js";
 import SortingView from "../view/sorting-view.js";
 import EventsListView from "../view/events-list-view.js";
@@ -13,6 +14,7 @@ export default class TripPresenter {
     this._boardContainerElement = boardContainer;
 
     this._eventPresenter = {};
+    this._currentSortType = SortType.DEFAULT;
 
     this._sortingComponent = new SortingView();
     this._eventsListComponent = new EventsListView();
@@ -22,20 +24,13 @@ export default class TripPresenter {
 
     this._eventChangeHandler = this._eventChangeHandler.bind(this);
     this._modeChangeHandler = this._modeChangeHandler.bind(this);
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   init(events) {
     this._events = events.slice();
+    this._sourcedBoardEvents = events.slice();
     this._renderTrip();
-  }
-
-  _eventChangeHandler(updatedEvent) {
-    this._events = updateItem(this._events, updatedEvent);
-    this._eventPresenter[updatedEvent.id].init(updatedEvent);
-  }
-
-  _modeChangeHandler() {
-    Object.values(this._eventPresenter).forEach((presenter) => presenter.resetView());
   }
 
   _renderTrip() {
@@ -69,6 +64,7 @@ export default class TripPresenter {
 
   _renderSorting() {
     render(this._boardContainerElement, this._sortingComponent, RENDER_POSITION.BEFOREEND);
+    this._sortingComponent.setSortTypeChangeHandler(this._sortTypeChangeHandler);
   }
 
   _renderEventsList() {
@@ -82,5 +78,41 @@ export default class TripPresenter {
   _clearEventsList() {
     Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
+  }
+
+
+  // Обработчики
+  _eventChangeHandler(updatedEvent) {
+    this._events = updateItem(this._events, updatedEvent);
+    this._eventPresenter[updatedEvent.id].init(updatedEvent);
+  }
+
+  _modeChangeHandler() {
+    Object.values(this._eventPresenter).forEach((presenter) => presenter.resetView());
+  }
+
+
+  // Сортировка событий
+  _sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.PRICE_DOWN:
+        this._events.sort(sortPriceDown);
+        break;
+      case SortType.TIME_DOWN:
+        this._events.sort(sortTimeDown);
+        break;
+      default:
+        this._events = this._sourcedBoardEvents.slice();
+    }
+    this._currentSortType = sortType;
+  }
+
+  _sortTypeChangeHandler(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+    this._sortEvents(sortType);
+    this._clearEventsList();
+    this._renderAllEvents();
   }
 }

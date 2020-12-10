@@ -63,9 +63,10 @@ const EMPTY_EVENT = {
   isFavorite: false,
 };
 
-const MODE = {
-  DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`,
+const SortType = {
+  DEFAULT: `default`,
+  PRICE_DOWN: `price-down`,
+  TIME_DOWN: `time-down`,
 };
 
 export {
@@ -83,5 +84,5 @@ export {
   OPTIONS,
   RENDER_POSITION,
   EMPTY_EVENT,
-  MODE
+  SortType
 };

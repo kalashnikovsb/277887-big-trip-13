@@ -1,7 +1,12 @@
-import {RENDER_POSITION, MODE} from "../const.js";
+import {RENDER_POSITION} from "../const.js";
 import {render, replace, remove} from "../utils/render-utils.js";
 import EventEditView from "../view/event-edit-view.js";
 import EventView from "../view/event-view.js";
+
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`,
+};
 
 export default class EventPresenter {
   constructor(eventsListContainer, changeData, changeMode) {
@@ -11,7 +16,7 @@ export default class EventPresenter {
 
     this._eventComponent = null;
     this._eventEditComponent = null;
-    this._mode = MODE.DEFAULT;
+    this._mode = Mode.DEFAULT;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._eventOpenClickHandler = this._eventOpenClickHandler.bind(this);
@@ -42,12 +47,12 @@ export default class EventPresenter {
     }
 
     // Отрисовка нового события вместо старого, проверка нужна чтобы не заменять то чего нет
-    if (this._mode === MODE.DEFAULT) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._eventComponent, prevEventComponent);
     }
 
     // Отрисовка нового события вместо старого, проверка нужна чтобы не заменять то чего нет
-    if (this._mode === MODE.EDITING) {
+    if (this._mode === Mode.EDITING) {
       replace(this._eventEditComponent, prevEventEditComponent);
     }
 
@@ -56,7 +61,7 @@ export default class EventPresenter {
   }
 
   resetView() {
-    if (this._mode !== MODE.DEFAULT) {
+    if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToEvent();
     }
   }
@@ -67,13 +72,13 @@ export default class EventPresenter {
     replace(this._eventEditComponent, this._eventComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
-    this._mode = MODE.EDITING;
+    this._mode = Mode.EDITING;
   }
 
   _replaceEditToEvent() {
     replace(this._eventComponent, this._eventEditComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    this._mode = MODE.DEFAULT;
+    this._mode = Mode.DEFAULT;
   }
 
 

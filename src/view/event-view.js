@@ -74,19 +74,34 @@ export default class EventView extends AbstractView {
     super();
     this._event = event;
     this._eventOpenClickHandler = this._eventOpenClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
     return getEventTemplate(this._event);
   }
 
+
+  // Открытие формы редактирования
   _eventOpenClickHandler(evt) {
     evt.preventDefault();
-    this._callback.click();
+    this._callback.openClick();
   }
 
   setEventOpenClickHandler(callback) {
-    this._callback.click = callback;
+    this._callback.openClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._eventOpenClickHandler);
+  }
+
+
+  // Нажатие на звездочку
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 }

@@ -63,6 +63,12 @@ const EMPTY_EVENT = {
   isFavorite: false,
 };
 
+const SortType = {
+  DEFAULT: `default`,
+  PRICE_DOWN: `price-down`,
+  TIME_DOWN: `time-down`,
+};
+
 export {
   EVENTS_COUNT,
   DAYS_GAP,
@@ -78,4 +84,5 @@ export {
   OPTIONS,
   RENDER_POSITION,
   EMPTY_EVENT,
+  SortType
 };

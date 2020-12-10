@@ -8,4 +8,14 @@ const sortTimeEndUp = (eventA, eventB) => {
 };
 
 
-export {sortTimeStartUp, sortTimeEndUp};
+const sortPriceDown = (eventA, eventB) => {
+  return eventB.price - eventA.price;
+};
+
+const sortTimeDown = (eventA, eventB) => {
+  const durationA = eventA.timeEnd.getTime() - eventA.timeStart.getTime();
+  const durationB = eventB.timeEnd.getTime() - eventB.timeStart.getTime();
+  return durationB - durationA;
+};
+
+export {sortTimeStartUp, sortTimeEndUp, sortPriceDown, sortTimeDown};

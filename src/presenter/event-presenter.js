@@ -10,7 +10,7 @@ const Mode = {
 
 export default class EventPresenter {
   constructor(eventsListContainer, changeData, changeMode) {
-    this._eventsListContainer = eventsListContainer;
+    this._eventsListContainer = eventsListContainer
     this._changeData = changeData;
     this._changeMode = changeMode;
 

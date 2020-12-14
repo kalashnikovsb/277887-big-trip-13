@@ -1,6 +1,7 @@
-import {TYPES, DESTINATIONS, OPTIONS, EMPTY_EVENT} from "../const.js";
+import {TYPES, DESTINATIONS, EMPTY_EVENT, TYPES_TO_OPTIONS, DESTINATIONS_TO_DESCRIPTIONS} from "../const.js";
+import {addOrDeleteOption} from "../utils/events-utils.js";
 import dayjs from "dayjs";
-import AbstractView from "./abstract-view.js";
+import SmartView from "./smart-view.js";
 
 
 const getType = (type) => {
@@ -39,19 +40,16 @@ const getDestinationsList = () => {
 };
 
 
-const getOptionsList = (options) => {
-  if (options.length === 0) {
-    return ``;
-  }
+const getOptionsList = (type, options) => {
   return `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-  ${OPTIONS.map((constOption) => {
+  ${TYPES_TO_OPTIONS[type].map((constOption) => {
     const isChecked = options.some((option) => {
       return (option.name === constOption.name) ? true : false;
     });
     return `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.id}-1" type="checkbox" name="event-offer-${constOption.id}" ${isChecked ? `checked` : ``}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.id}-1" type="checkbox" name="event-offer-${constOption.id}" data-name="${constOption.name}" ${isChecked ? `checked` : ``}>
       <label class="event__offer-label" for="event-offer-${constOption.id}-1">
         <span class="event__offer-title">${constOption.name}</span>
         &plus;&euro;&nbsp;
@@ -79,21 +77,24 @@ const getPhotos = (photos) => {
 };
 
 
-const getDescription = (description, photos) => {
-  if (description.length === 0) {
-    return ``;
-  } else {
-    return `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${description}</p>
-      ${getPhotos(photos)}
-    </section>`;
-  }
+const getDescription = (destination, description, photos) => {
+  // if (description.length === 0) {
+  //   return ``;
+  // }
+  return `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${DESTINATIONS_TO_DESCRIPTIONS[destination]}</p>
+    ${getPhotos(photos)}
+  </section>`;
 };
 
 
-const getEventEditTemplate = (event) => {
-  const {type, destination, timeStart, timeEnd, price, options, description, photos} = event;
+const getEventEditTemplate = (data) => {
+  const {type, destination, timeStart, timeEnd, price, options, description, photos} = data;
+
+  // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
+  const optionsBlock = getOptionsList(type, options);
+  const descriptionBlock = getDescription(destination, description, photos);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -131,31 +132,45 @@ const getEventEditTemplate = (event) => {
           <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit"}>Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
       <section class="event__details">
-        ${getOptionsList(options)}
-        ${getDescription(description, photos)}
+        ${optionsBlock}
+        ${descriptionBlock}
       </section>
     </form>
   </li>`;
 };
 
 
-export default class EventEditView extends AbstractView {
+export default class EventEditView extends SmartView {
   constructor(event = EMPTY_EVENT) {
     super();
-    this._event = event;
+    this._data = EventEditView.parseEventToData(event);
     this._eventEditCloseClickHandler = this._eventEditCloseClickHandler.bind(this);
     this._eventEditSubmitHandler = this._eventEditSubmitHandler.bind(this);
+
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._optionsChangeHandler = this._optionsChangeHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
+
   getTemplate() {
-    return getEventEditTemplate(this._event);
+    return getEventEditTemplate(this._data);
+  }
+
+
+  // сброс формы
+  reset(event) {
+    this.updateData(EventEditView.parseEventToData(event));
   }
 
 
@@ -164,6 +179,7 @@ export default class EventEditView extends AbstractView {
     evt.preventDefault();
     this._callback.click();
   }
+
 
   setEventEditCloseClickHandler(callback) {
     this._callback.click = callback;
@@ -174,11 +190,99 @@ export default class EventEditView extends AbstractView {
   // Отправка формы
   _eventEditSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._event);
+    this._callback.formSubmit(EventEditView.parseDatatoEvent(this._data));
   }
+
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._eventEditSubmitHandler);
+  }
+
+
+  static parseEventToData(event) {
+    return Object.assign(
+        {},
+        event
+    );
+  }
+
+
+  static parseDatatoEvent(data) {
+    return Object.assign(
+        {},
+        data
+    );
+  }
+
+
+  _typeChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value.charAt(0).toUpperCase() + evt.target.value.slice(1)
+    });
+  }
+
+
+  _destinationChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      destination: evt.target.value
+    });
+  }
+
+
+  _priceInputHandler(evt) {
+    evt.preventDefault();
+    let result = evt.target.value;
+    const isCorrect = Number(result) && result >= 0;
+    // Если ввод некорректный то в поле показать пустую строку, а цену установить 0
+    if (!isCorrect) {
+      evt.target.value = ``;
+      result = 0;
+    }
+    this.updateData({
+      price: result
+    }, true);
+  }
+
+
+  _optionsChangeHandler(evt) {
+    evt.preventDefault();
+    // Нахожу имя опции на которой был клик
+    const optionName = evt.target.dataset.name;
+    // Нахожу среди всех доступных опций ту на которой был клик
+    const optionCurrent = TYPES_TO_OPTIONS[this._data.type].find((item) => {
+      if (item.name === optionName) {
+        return item;
+      }
+      return false;
+    });
+    // Добавляю опцию если ее нет, либо удаляю если она уже есть
+    this._data.options = addOrDeleteOption(this._data.options, optionCurrent);
+    this.updateData({
+      options: this._data.options
+    });
+  }
+
+
+  // Восстанавливаю все обработчики
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setEventEditCloseClickHandler(this._callback.click);
+  }
+
+
+  // Восстанавливаю только внутренние обработчики
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._typeChangeHandler);
+    this.getElement().querySelector(`#event-destination-1`).addEventListener(`change`, this._destinationChangeHandler);
+    this.getElement().querySelector(`#event-price-1`).addEventListener(`input`, this._priceInputHandler);
+
+    const options = this.getElement().querySelectorAll(`.event__offer-checkbox`);
+    for (let option of options) {
+      option.addEventListener(`click`, this._optionsChangeHandler);
+    }
   }
 }

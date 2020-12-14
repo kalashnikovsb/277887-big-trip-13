@@ -12,10 +12,32 @@ const sortPriceDown = (eventA, eventB) => {
   return eventB.price - eventA.price;
 };
 
+
 const sortTimeDown = (eventA, eventB) => {
   const durationA = eventA.timeEnd.getTime() - eventA.timeStart.getTime();
   const durationB = eventB.timeEnd.getTime() - eventB.timeStart.getTime();
   return durationB - durationA;
 };
 
-export {sortTimeStartUp, sortTimeEndUp, sortPriceDown, sortTimeDown};
+
+// Функция добавляет или удаляет опцию в массив в зависимости от ее наличия
+const addOrDeleteOption = (array, option) => {
+  let result = array.slice();
+  let index = -1;
+  result.forEach((item, i) => {
+    if (item.name === option.name) {
+      index = i;
+    }
+  });
+  if (index === -1) {
+    result.push(option);
+  } else {
+    result = [
+      ...result.slice(0, index),
+      ...result.slice(index + 1)
+    ];
+  }
+  return result;
+};
+
+export {sortTimeStartUp, sortTimeEndUp, sortPriceDown, sortTimeDown, addOrDeleteOption};

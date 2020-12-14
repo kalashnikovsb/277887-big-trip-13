@@ -92,6 +92,8 @@ const getDescription = (destination, description, photos) => {
 const getEventEditTemplate = (data) => {
   const {type, destination, timeStart, timeEnd, price, options, description, photos} = data;
 
+  const isSubmitDisable = !(Number(price) && price >= 0);
+
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
   const optionsBlock = getOptionsList(type, options);
   const descriptionBlock = getDescription(destination, description, photos);
@@ -132,7 +134,7 @@ const getEventEditTemplate = (data) => {
           <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit"}>Save</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisable ? `disabled` : ``}>Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
@@ -235,15 +237,14 @@ export default class EventEditView extends SmartView {
   _priceInputHandler(evt) {
     evt.preventDefault();
     let result = evt.target.value;
-    const isCorrect = Number(result) && result >= 0;
     // Если ввод некорректный то в поле показать пустую строку, а цену установить 0
-    if (!isCorrect) {
-      evt.target.value = ``;
-      result = 0;
-    }
+    // if (!isCorrect) {
+    //   evt.target.value = ``;
+    //   result = 0;
+    // }
     this.updateData({
       price: result
-    }, true);
+    });
   }
 
 
@@ -278,7 +279,7 @@ export default class EventEditView extends SmartView {
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._typeChangeHandler);
     this.getElement().querySelector(`#event-destination-1`).addEventListener(`change`, this._destinationChangeHandler);
-    this.getElement().querySelector(`#event-price-1`).addEventListener(`input`, this._priceInputHandler);
+    this.getElement().querySelector(`#event-price-1`).addEventListener(`change`, this._priceInputHandler);
 
     const options = this.getElement().querySelectorAll(`.event__offer-checkbox`);
     for (let option of options) {

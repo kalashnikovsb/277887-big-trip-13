@@ -253,12 +253,7 @@ export default class EventEditView extends SmartView {
     // Нахожу имя опции на которой был клик
     const optionName = evt.target.dataset.name;
     // Нахожу среди всех доступных опций ту на которой был клик
-    const optionCurrent = TYPES_TO_OPTIONS[this._data.type].find((item) => {
-      if (item.name === optionName) {
-        return item;
-      }
-      return false;
-    });
+    const optionCurrent = TYPES_TO_OPTIONS[this._data.type].find((item) => item.name === optionName);
     // Добавляю опцию если ее нет, либо удаляю если она уже есть
     this._data.options = addOrDeleteOption(this._data.options, optionCurrent);
     this.updateData({

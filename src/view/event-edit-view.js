@@ -1,7 +1,10 @@
 import {TYPES, DESTINATIONS, EMPTY_EVENT, TYPES_TO_OPTIONS, DESTINATIONS_TO_DESCRIPTIONS} from "../const.js";
 import {addOrDeleteOption} from "../utils/events-utils.js";
-import dayjs from "dayjs";
 import SmartView from "./smart-view.js";
+import dayjs from "dayjs";
+import flatpickr from "flatpickr";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 
 const getType = (type) => {
@@ -153,6 +156,10 @@ export default class EventEditView extends SmartView {
   constructor(event = EMPTY_EVENT) {
     super();
     this._data = EventEditView.parseEventToData(event);
+
+    this._startDatepicker = null;
+    this._endDatepicker = null;
+
     this._eventEditCloseClickHandler = this._eventEditCloseClickHandler.bind(this);
     this._eventEditSubmitHandler = this._eventEditSubmitHandler.bind(this);
 
@@ -161,7 +168,12 @@ export default class EventEditView extends SmartView {
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._optionsChangeHandler = this._optionsChangeHandler.bind(this);
 
+    this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
+    this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
+
     this._setInnerHandlers();
+    this._setStartDatepicker();
+    this._setEndDatepicker();
   }
 
 
@@ -265,6 +277,8 @@ export default class EventEditView extends SmartView {
   // Восстанавливаю все обработчики
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setStartDatepicker();
+    this._setEndDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEventEditCloseClickHandler(this._callback.click);
   }
@@ -280,5 +294,64 @@ export default class EventEditView extends SmartView {
     for (let option of options) {
       option.addEventListener(`click`, this._optionsChangeHandler);
     }
+  }
+
+
+  _setStartDatepicker() {
+    if (this._startDatepicker) {
+      this._startDatepicker.destroy();
+      this._startDatepicker = null;
+    }
+    this._startDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          dateFormat: `d/m/y H:i`,
+          enableTime: true,
+          defaultDate: this._data.timeStart,
+          onClose: this._startTimeChangeHandler
+        }
+    );
+  }
+
+  _setEndDatepicker() {
+    if (this._endDatepicker) {
+      this._endDatepicker.destroy();
+      this._endDatepicker = null;
+    }
+    this._endDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          dateFormat: `d/m/y H:i`,
+          enableTime: true,
+          defaultDate: this._data.timeEnd,
+          onClose: this._endTimeChangeHandler
+        }
+    );
+  }
+
+
+  _startTimeChangeHandler([timeStart]) {
+    let startMilliseconds = timeStart.getTime();
+    let endMilliseconds = this._data.timeEnd.getTime();
+    if (endMilliseconds < startMilliseconds) {
+      endMilliseconds = startMilliseconds;
+    }
+    this.updateData({
+      timeStart: dayjs(new Date(startMilliseconds)).second(59).toDate(),
+      timeEnd: dayjs(new Date(endMilliseconds)).second(59).toDate()
+    });
+  }
+
+
+  _endTimeChangeHandler([timeEnd]) {
+    let startMilliseconds = this._data.timeStart.getTime();
+    let endMilliseconds = timeEnd.getTime();
+    if (endMilliseconds < startMilliseconds) {
+      startMilliseconds = endMilliseconds;
+    }
+    this.updateData({
+      timeEnd: dayjs(new Date(endMilliseconds)).second(59).toDate(),
+      timeStart: dayjs(new Date(startMilliseconds)).second(59).toDate()
+    });
   }
 }

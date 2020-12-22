@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {sortTimeEndUp} from "../utils/events-utils.js";
+import {sortTimeEndUp, sortTimeStartUp} from "../utils/events-utils.js";
 import AbstractView from "./abstract-view.js";
 
 
@@ -7,11 +7,13 @@ const getDestinations = (events) => {
   if (events.length === 0) {
     return ``;
   }
+  events.sort(sortTimeStartUp);
+
   let destinations = [];
-  for (let item of events) {
-    destinations.push(item.destination);
-  }
+  events.forEach((item) => destinations.push(item.destination));
+
   const unique = Array.from(new Set(destinations));
+
   switch (unique.length) {
     case 0:
       return ``;
@@ -19,8 +21,10 @@ const getDestinations = (events) => {
       return unique[0];
     case 2:
       return unique.join(` &mdash; `);
+    case 3:
+      return `${unique[0]} &mdash; ${unique[1]} &mdash; ${destinations[destinations.length - 1]}`;
     default:
-      return `${unique[0]} &mdash; ... &mdash; ${unique[unique.length - 1]}`;
+      return `${destinations[0]} &mdash; ... &mdash; ${destinations[destinations.length - 1]}`;
   }
 };
 

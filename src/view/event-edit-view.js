@@ -162,14 +162,13 @@ export default class EventEditView extends SmartView {
 
     this._eventEditCloseClickHandler = this._eventEditCloseClickHandler.bind(this);
     this._eventEditSubmitHandler = this._eventEditSubmitHandler.bind(this);
-
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._optionsChangeHandler = this._optionsChangeHandler.bind(this);
-
     this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
     this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setStartDatepicker();
@@ -211,6 +210,18 @@ export default class EventEditView extends SmartView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._eventEditSubmitHandler);
+  }
+
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EventEditView.parseDatatoEvent(this._data));
+  }
+
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 
 
@@ -281,6 +292,7 @@ export default class EventEditView extends SmartView {
     this._setEndDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEventEditCloseClickHandler(this._callback.click);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
 
@@ -354,4 +366,14 @@ export default class EventEditView extends SmartView {
       timeStart: dayjs(new Date(startMilliseconds)).second(59).toDate()
     });
   }
+
+
+  removeElement() {
+    super.removeElement();
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+  }
+
 }

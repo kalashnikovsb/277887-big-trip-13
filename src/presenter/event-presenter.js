@@ -2,11 +2,13 @@ import {RENDER_POSITION} from "../const.js";
 import {render, replace, remove} from "../utils/render-utils.js";
 import EventEditView from "../view/event-edit-view.js";
 import EventView from "../view/event-view.js";
+import {UserAction, UpdateType} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
   EDITING: `EDITING`,
 };
+
 
 export default class EventPresenter {
   constructor(eventsListContainer, changeData, changeMode) {
@@ -23,7 +25,9 @@ export default class EventPresenter {
     this._eventEditCloseClickHandler = this._eventEditCloseClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
   }
+
 
   init(event) {
     this._event = event;
@@ -39,6 +43,7 @@ export default class EventPresenter {
     this._eventComponent.setFavoriteClickHandler(this._favoriteClickHandler);
     this._eventEditComponent.setEventEditCloseClickHandler(this._eventEditCloseClickHandler);
     this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
+    this._eventEditComponent.setDeleteClickHandler(this._deleteClickHandler);
 
     // Если предыдущих компонентов нет то отрисовать новые
     if (prevEventComponent === null || prevEventEditComponent === null) {
@@ -60,6 +65,7 @@ export default class EventPresenter {
     remove(prevEventEditComponent);
   }
 
+
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToEvent();
@@ -74,6 +80,7 @@ export default class EventPresenter {
     this._changeMode();
     this._mode = Mode.EDITING;
   }
+
 
   _replaceEditToEvent() {
     replace(this._eventComponent, this._eventEditComponent);
@@ -91,22 +98,47 @@ export default class EventPresenter {
     }
   }
 
+
   _eventOpenClickHandler() {
     this._replaceEventToEdit();
   }
+
 
   _eventEditCloseClickHandler() {
     this._replaceEditToEvent();
   }
 
+
   _favoriteClickHandler() {
-    this._changeData(Object.assign({}, this._event, {isFavorite: !this._event.isFavorite}));
+    this._changeData(
+        UserAction.UPDATE_EVENT,
+        UpdateType.PATCH,
+        Object.assign({},
+            this._event,
+            {isFavorite: !this._event.isFavorite}
+        )
+    );
   }
 
+
   _formSubmitHandler(event) {
-    this._changeData(event);
+    this._changeData(
+        UserAction.UPDATE_EVENT,
+        UpdateType.MAJOR,
+        event
+    );
     this._replaceEditToEvent();
   }
+
+
+  _deleteClickHandler(event) {
+    this._changeData(
+        UserAction.DELETE_EVENT,
+        UpdateType.MAJOR,
+        event
+    );
+  }
+
 
   destroy() {
     remove(this._eventComponent);

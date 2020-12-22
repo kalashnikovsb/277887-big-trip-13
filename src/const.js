@@ -86,6 +86,18 @@ const SortType = {
   TIME_DOWN: `time-down`,
 };
 
+const UserAction = {
+  UPDATE_EVENT: `UPDATE_EVENT`,
+  ADD_EVENT: `ADD_EVENT`,
+  DELETE_EVENT: `DELETE_EVENT`
+};
+
+const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
 export {
   EVENTS_COUNT,
   DAYS_GAP,
@@ -101,5 +113,7 @@ export {
   TYPES_TO_OPTIONS,
   RENDER_POSITION,
   EMPTY_EVENT,
-  SortType
+  SortType,
+  UserAction,
+  UpdateType
 };

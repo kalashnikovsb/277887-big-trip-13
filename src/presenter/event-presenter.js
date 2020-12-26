@@ -1,4 +1,4 @@
-import {RENDER_POSITION} from "../const.js";
+import {RenderPosition} from "../const.js";
 import {render, replace, remove} from "../utils/render-utils.js";
 import EventEditView from "../view/event-edit-view.js";
 import EventView from "../view/event-view.js";
@@ -47,7 +47,7 @@ export default class EventPresenter {
 
     // Если предыдущих компонентов нет то отрисовать новые
     if (prevEventComponent === null || prevEventEditComponent === null) {
-      render(this._eventsListContainer, this._eventComponent, RENDER_POSITION.BEFOREEND);
+      render(this._eventsListContainer, this._eventComponent, RenderPosition.BEFOREEND);
       return;
     }
 

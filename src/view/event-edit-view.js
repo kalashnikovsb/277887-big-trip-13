@@ -8,23 +8,31 @@ import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 
 const getType = (type) => {
-  return type || TYPES[0];
+  if (Boolean(type) === false) {
+    return ``;
+  }
+  return type;
 };
 
 
 const getDestination = (destination) => {
-  return destination || DESTINATIONS[0];
+  if (Boolean(destination) === false) {
+    return ``;
+  }
+  return destination;
 };
 
 
-const getEventTypesList = () => {
+const getEventTypesList = (currentType) => {
+  currentType = currentType.toLowerCase();
+
   return `<div class="event__type-list">
     <fieldset class="event__type-group">
       <legend class="visually-hidden">Event type</legend>
   ${TYPES.map((type) => {
     type = type.toLowerCase();
     return `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${type === currentType ? `checked` : ``}>
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
     </div>`;
   }).join(``)}
@@ -44,6 +52,10 @@ const getDestinationsList = () => {
 
 
 const getOptionsList = (type, options) => {
+  if (Boolean(type) === false) {
+    return ``;
+  }
+
   return `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
@@ -66,7 +78,7 @@ const getOptionsList = (type, options) => {
 
 
 const getPhotos = (photos) => {
-  if (photos.length === 0) {
+  if (Boolean(photos) === false || photos.length === 0) {
     return ``;
   }
   return `<div class="event__photos-container">
@@ -81,9 +93,10 @@ const getPhotos = (photos) => {
 
 
 const getDescription = (destination, description, photos) => {
-  // if (description.length === 0) {
-  //   return ``;
-  // }
+  if (Boolean(destination) === false) {
+    return ``;
+  }
+
   return `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${DESTINATIONS_TO_DESCRIPTIONS[destination]}</p>
@@ -95,7 +108,7 @@ const getDescription = (destination, description, photos) => {
 const getEventEditTemplate = (data) => {
   const {type, destination, timeStart, timeEnd, price, options, description, photos} = data;
 
-  const isSubmitDisable = !(Number(price) && price >= 0);
+  const isSubmitDisable = !(Number(price) && price >= 0) || Boolean(destination) === false;
 
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
   const optionsBlock = getOptionsList(type, options);
@@ -110,7 +123,7 @@ const getEventEditTemplate = (data) => {
             <img class="event__type-icon" width="17" height="17" src="img/icons/${getType(type)}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-          ${getEventTypesList()}
+          ${getEventTypesList(type)}
         </div>
 
         <div class="event__field-group  event__field-group--destination">
@@ -260,11 +273,6 @@ export default class EventEditView extends SmartView {
   _priceInputHandler(evt) {
     evt.preventDefault();
     let result = evt.target.value;
-    // Если ввод некорректный то в поле показать пустую строку, а цену установить 0
-    // if (!isCorrect) {
-    //   evt.target.value = ``;
-    //   result = 0;
-    // }
     this.updateData({
       price: result
     });

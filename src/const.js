@@ -1,4 +1,4 @@
-const EVENTS_COUNT = 10;
+const EVENTS_COUNT = 1;
 const DAYS_GAP = 7;
 const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const MIN_OPTIONS_COUNT = 0;
@@ -61,15 +61,8 @@ const TYPES_TO_OPTIONS = {
   [TYPES[9]]: [OPTIONS[9], OPTIONS[0], OPTIONS[1]],
 };
 
-const RENDER_POSITION = {
-  BEFOREBEGIN: `beforebegin`,
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`,
-};
-
 const EMPTY_EVENT = {
-  type: ``,
+  type: TYPES[6], // Flight по умолчанию
   destination: ``,
   description: ``,
   options: [],
@@ -78,6 +71,13 @@ const EMPTY_EVENT = {
   timeStart: new Date(),
   timeEnd: new Date(),
   isFavorite: false,
+};
+
+const RenderPosition = {
+  BEFOREBEGIN: `beforebegin`,
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
 };
 
 const SortType = {
@@ -98,6 +98,12 @@ const UpdateType = {
   MAJOR: `MAJOR`
 };
 
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+
 export {
   EVENTS_COUNT,
   DAYS_GAP,
@@ -111,9 +117,10 @@ export {
   DESTINATIONS_TO_DESCRIPTIONS,
   OPTIONS,
   TYPES_TO_OPTIONS,
-  RENDER_POSITION,
   EMPTY_EVENT,
+  RenderPosition,
   SortType,
   UserAction,
-  UpdateType
+  UpdateType,
+  FilterType
 };

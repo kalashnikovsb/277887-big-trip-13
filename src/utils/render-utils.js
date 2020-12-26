@@ -1,4 +1,4 @@
-import {RENDER_POSITION} from "../const.js";
+import {RenderPosition} from "../const.js";
 import AbstractView from "../view/abstract-view.js";
 
 
@@ -43,16 +43,16 @@ const render = (container, child, position) => {
     child = child.getElement();
   }
   switch (position) {
-    case RENDER_POSITION.BEFOREBEGIN:
+    case RenderPosition.BEFOREBEGIN:
       container.before(child);
       break;
-    case RENDER_POSITION.BEFOREEND:
+    case RenderPosition.BEFOREEND:
       container.append(child);
       break;
-    case RENDER_POSITION.AFTERBEGIN:
+    case RenderPosition.AFTERBEGIN:
       container.prepend(child);
       break;
-    case RENDER_POSITION.AFTEREND:
+    case RenderPosition.AFTEREND:
       container.after(child);
       break;
   }

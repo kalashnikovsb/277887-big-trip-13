@@ -43,7 +43,7 @@ const getOptions = (type) => {
   return getRandomItems(TYPES_TO_OPTIONS[type], MIN_OPTIONS_COUNT, MAX_OPTIONS_COUNT);
 };
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 export const generateEventsMock = () => {
   const type = getRandomElement(TYPES);

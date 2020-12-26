@@ -41,8 +41,8 @@ export default class TripPresenter {
 
 
   _renderTrip() {
-    this._eventsListComponent = new EventsListView();
-    this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+    // this._eventsListComponent = new EventsListView();
+
 
     const eventsCount = this._getEvents().length;
     if (eventsCount === 0) {
@@ -54,6 +54,8 @@ export default class TripPresenter {
     this._renderSorting();
     this._renderEventsList();
     this._renderEvents();
+
+    this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
   }
 
 
@@ -65,10 +67,10 @@ export default class TripPresenter {
 
 
   _renderEventsList() {
-    // if (this._eventsListComponent !== null) {
-    //   this._eventsListComponent = null;
-    // }
-    // this._eventsListComponent = new EventsListView();
+    if (this._eventsListComponent !== null) {
+      this._eventsListComponent = null;
+    }
+    this._eventsListComponent = new EventsListView();
     render(this._boardContainerElement, this._eventsListComponent, RenderPosition.BEFOREEND);
   }
 
@@ -137,6 +139,7 @@ export default class TripPresenter {
     const eventsCount = this._getEvents();
     if (eventsCount === 0) {
       remove(this._noEventsNoticeComponent);
+      this._noEventsNoticeComponent = null;
     }
 
     remove(this._tripInformationComponent);
@@ -182,8 +185,8 @@ export default class TripPresenter {
 
 
   _renderNoEventsNotice() {
-    if (this._noEventsNoticeComponent !== null) {
-      this._noEventsNoticeComponent = null;
+    if (this._noEventsNoticeComponent) {
+      return;
     }
     this._noEventsNoticeComponent = new NoEventsNoticeView();
     render(this._tripEventsElement, this._noEventsNoticeComponent, RenderPosition.BEFOREEND);

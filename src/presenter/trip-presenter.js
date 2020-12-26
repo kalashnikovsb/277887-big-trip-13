@@ -55,13 +55,21 @@ export default class TripPresenter {
     this._renderEventsList();
     this._renderEvents();
 
-    this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+    // this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
   }
 
 
   createEvent() {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+
+    if (this._noEventsNoticeComponent) {
+      remove(this._noEventsNoticeComponent);
+      this._noEventsNoticeComponent = null;
+      this._renderEventsList();
+      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+    }
+
     this._eventNewPresenter.init();
   }
 
@@ -130,7 +138,10 @@ export default class TripPresenter {
 
 
   _clearTrip({resetSortType = false} = {}) {
-    this._eventNewPresenter.destroy();
+    if (this._eventNewPresenter) {
+      this._eventNewPresenter.destroy();
+    }
+
     Object
       .values(this._eventPresenter)
       .forEach((event) => event.destroy());
@@ -208,7 +219,9 @@ export default class TripPresenter {
 
 
   _modeChangeHandler() {
-    this._eventNewPresenter.destroy();
+    if (this._eventNewPresenter) {
+      this._eventNewPresenter.destroy();
+    }
     Object.values(this._eventPresenter).forEach((presenter) => presenter.resetView());
   }
 

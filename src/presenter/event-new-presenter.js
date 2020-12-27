@@ -3,6 +3,7 @@ import {generateId} from "../mock/generate-events-mock.js";
 import {remove, render} from "../utils/render-utils.js";
 import {RenderPosition, UserAction, UpdateType} from "../const.js";
 
+
 export default class EventNew {
   constructor(eventsListContainer, changeData) {
     this._eventsListContainer = eventsListContainer;
@@ -51,7 +52,7 @@ export default class EventNew {
 
 
   _deleteClickHandler() {
-    this._destroy();
+    this.destroy();
   }
 
 

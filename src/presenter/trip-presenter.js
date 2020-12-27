@@ -41,36 +41,40 @@ export default class TripPresenter {
 
 
   _renderTrip() {
-    // this._eventsListComponent = new EventsListView();
-
-
     const eventsCount = this._getEvents().length;
     if (eventsCount === 0) {
       this._renderNoEventsNotice();
       return;
     }
 
+    this._removeNoEventsNoticeIfExist();
     this._renderTripInformation();
     this._renderSorting();
     this._renderEventsList();
     this._renderEvents();
 
-    // this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+    this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
   }
 
 
   createEvent() {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    if (this._noEventsNoticeComponent) {
+      this._removeNoEventsNoticeIfExist();
+      this._renderEventsList();
+      this._renderNoEventsNotice();
+      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+    }
+    this._eventNewPresenter.init();
+  }
 
+
+  _removeNoEventsNoticeIfExist() {
     if (this._noEventsNoticeComponent) {
       remove(this._noEventsNoticeComponent);
       this._noEventsNoticeComponent = null;
-      this._renderEventsList();
-      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
     }
-
-    this._eventNewPresenter.init();
   }
 
 
@@ -200,7 +204,7 @@ export default class TripPresenter {
       return;
     }
     this._noEventsNoticeComponent = new NoEventsNoticeView();
-    render(this._tripEventsElement, this._noEventsNoticeComponent, RenderPosition.BEFOREEND);
+    render(this._boardContainerElement, this._noEventsNoticeComponent, RenderPosition.BEFOREEND);
   }
 
 
@@ -208,14 +212,6 @@ export default class TripPresenter {
     Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
   }
-
-
-  // Обработчики
-  // _eventChangeHandler(updatedEvent) {
-  //   // Здесь будем вызывать обновление модели
-  //   console.log(1);
-  //   this._eventPresenter[updatedEvent.id].init(updatedEvent);
-  // }
 
 
   _modeChangeHandler() {

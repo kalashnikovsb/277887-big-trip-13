@@ -2,6 +2,7 @@ import {TYPES, DESTINATIONS, EMPTY_EVENT, TYPES_TO_OPTIONS, DESTINATIONS_TO_DESC
 import {addOrDeleteOption} from "../utils/events-utils.js";
 import SmartView from "./smart-view.js";
 import dayjs from "dayjs";
+import he from "he";
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
@@ -105,10 +106,35 @@ const getDescription = (destination, description, photos) => {
 };
 
 
-const getEventEditTemplate = (data) => {
-  const {type, destination, timeStart, timeEnd, price, options, description, photos} = data;
+// Функция проверки на существование введенного пункта назначения
+const isDestinationCorrect = (destination) => {
+  let isExist = false;
+  DESTINATIONS.forEach((city) => {
+    if (city === destination) {
+      isExist = true;
+    }
+  });
+  return isExist;
+};
 
-  const isSubmitDisable = !(Number(price) && price >= 0) || Boolean(destination) === false;
+
+const getEventEditTemplate = (data) => {
+  const {type, timeStart, timeEnd, options, description, photos} = data;
+  let {price, destination} = data;
+
+  // Проверка на существование введенного пункта назначения
+  if (isDestinationCorrect(destination) === false) {
+    destination = ``;
+  }
+
+  // Преобразую строку к числу, отсекаю дробную часть
+  // Не позволяю числу быть ниже 0, либо отрицательным, либо быть NaN
+  price = Math.trunc(Number(price));
+  if (Boolean(price) !== true || price < 0) {
+    price = ``;
+  }
+
+  const isSubmitDisable = !(price >= 0) || Boolean(destination) === false;
 
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
   const optionsBlock = getOptionsList(type, options);
@@ -130,7 +156,7 @@ const getEventEditTemplate = (data) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${getType(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${getDestination(destination)}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(getDestination(destination))}" list="destination-list-1">
           ${getDestinationsList()}
         </div>
 

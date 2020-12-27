@@ -61,15 +61,8 @@ const TYPES_TO_OPTIONS = {
   [TYPES[9]]: [OPTIONS[9], OPTIONS[0], OPTIONS[1]],
 };
 
-const RENDER_POSITION = {
-  BEFOREBEGIN: `beforebegin`,
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`,
-};
-
 const EMPTY_EVENT = {
-  type: ``,
+  type: TYPES[6], // Flight по умолчанию
   destination: ``,
   description: ``,
   options: [],
@@ -80,10 +73,35 @@ const EMPTY_EVENT = {
   isFavorite: false,
 };
 
+const RenderPosition = {
+  BEFOREBEGIN: `beforebegin`,
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
+};
+
 const SortType = {
   DEFAULT: `default`,
   PRICE_DOWN: `price-down`,
   TIME_DOWN: `time-down`,
+};
+
+const UserAction = {
+  UPDATE_EVENT: `UPDATE_EVENT`,
+  ADD_EVENT: `ADD_EVENT`,
+  DELETE_EVENT: `DELETE_EVENT`
+};
+
+const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
 };
 
 export {
@@ -99,7 +117,10 @@ export {
   DESTINATIONS_TO_DESCRIPTIONS,
   OPTIONS,
   TYPES_TO_OPTIONS,
-  RENDER_POSITION,
   EMPTY_EVENT,
-  SortType
+  RenderPosition,
+  SortType,
+  UserAction,
+  UpdateType,
+  FilterType
 };

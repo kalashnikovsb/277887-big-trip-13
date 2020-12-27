@@ -4,11 +4,13 @@ const getRandomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+
 const getRandomElement = (array) => {
   const lastIndex = array.length - 1;
   const randomIndex = getRandomInteger(0, lastIndex);
   return array[randomIndex];
 };
+
 
 // Функция возвращает подмассив переданного массива, имеющий случайную длину (в т.ч. пустой) и состоящий из случайных элементов
 const getRandomItems = (array, minLength, maxLength) => {
@@ -24,16 +26,5 @@ const getRandomItems = (array, minLength, maxLength) => {
   return subArray;
 };
 
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-  if (index === -1) {
-    return items;
-  }
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1)
-  ];
-};
 
-export {getRandomInteger, getRandomElement, getRandomItems, updateItem};
+export {getRandomInteger, getRandomElement, getRandomItems};

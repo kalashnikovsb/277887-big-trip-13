@@ -40,4 +40,17 @@ const addOrDeleteOption = (array, option) => {
   return result;
 };
 
-export {sortTimeStartUp, sortTimeEndUp, sortPriceDown, sortTimeDown, addOrDeleteOption};
+
+const isFutureEvent = (time) => {
+  const currentTime = new Date().getTime();
+  const targetTime = time.getTime();
+  return (targetTime > currentTime) ? true : false;
+};
+
+const isPastEvent = (time) => {
+  const currentTime = new Date().getTime();
+  const targetTime = time.getTime();
+  return (targetTime < currentTime) ? true : false;
+};
+
+export {sortTimeStartUp, sortTimeEndUp, sortPriceDown, sortTimeDown, addOrDeleteOption, isFutureEvent, isPastEvent};

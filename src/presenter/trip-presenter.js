@@ -41,14 +41,24 @@ export default class TripPresenter {
 
 
   _renderTrip() {
-    const eventsCount = this._getEvents().length;
-    if (eventsCount === 0) {
+    // При каждой перерисовке устанавливается текущий тип фильтрации
+    // чтобы при его изменении сбрасывать сортировку
+    this._currentFilterType = this._filterModel.getFilter();
+
+    // Количество всех существующих событий
+    const eventsCount = this._getAllEvents().length;
+    if (eventsCount !== 0) {
+      this._renderTripInformation();
+    }
+
+    // Количество отображенных событий на странице
+    const eventsCurrentCount = this._getEvents().length;
+    if (eventsCurrentCount === 0) {
       this._renderNoEventsNotice();
       return;
     }
 
     this._removeNoEventsNoticeIfExist();
-    this._renderTripInformation();
     this._renderSorting();
     this._renderEventsList();
     this._renderEvents();
@@ -129,6 +139,11 @@ export default class TripPresenter {
     const events = this._eventsModel.getEvents();
     const filteredEvents = filter[filterType](events);
 
+    // Если фильтр поменялся, то сбросить сортировку
+    if (filterType !== this._currentFilterType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
+
     switch (this._currentSortType) {
       case SortType.PRICE_DOWN:
         return filteredEvents.sort(sortPriceDown);
@@ -138,6 +153,21 @@ export default class TripPresenter {
         return filteredEvents.sort(sortTimeStartUp);
     }
     return filteredEvents.sort(sortTimeStartUp);
+  }
+
+
+  // get currentSortType() {
+  //   return this._currentSortType;
+  // }
+  //
+  //
+  // set currentSortType(value) {
+  //   this._currentSortType = value;
+  // }
+
+
+  _getAllEvents() {
+    return this._eventsModel.getEvents();
   }
 
 
@@ -184,7 +214,7 @@ export default class TripPresenter {
     if (this._tripInformationComponent !== null) {
       this._tripInformationComponent = null;
     }
-    this._tripInformationComponent = new TripInformationView(this._getEvents());
+    this._tripInformationComponent = new TripInformationView(this._getAllEvents());
     render(this._headerContainerElement, this._tripInformationComponent, RenderPosition.AFTERBEGIN);
   }
 

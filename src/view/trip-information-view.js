@@ -51,7 +51,22 @@ const getTripDates = (events) => {
 };
 
 
+const getTotalCost = (events) => {
+  let eventsCost = 0;
+  let optionsCost = 0;
+  events.forEach((event) => {
+    eventsCost += Number(event.price);
+    event.options.forEach((option) => {
+      optionsCost += Number(option.price);
+    });
+  });
+  return eventsCost + optionsCost;
+};
+
+
 const getTripInformationTemplate = (events) => {
+  const totalCost = getTotalCost(events);
+
   return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">${getDestinations(events)}</h1>
@@ -60,7 +75,7 @@ const getTripInformationTemplate = (events) => {
     </div>
 
     <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalCost}</span>
     </p>
   </section>`;
 };

@@ -1,4 +1,4 @@
-const EVENTS_COUNT = 1;
+const EVENTS_COUNT = 10;
 const DAYS_GAP = 7;
 const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const MIN_OPTIONS_COUNT = 0;

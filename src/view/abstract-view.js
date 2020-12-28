@@ -10,9 +10,11 @@ export default class AbstractView {
     this._callback = {};
   }
 
+
   getTemplate() {
     throw new Error(`Abstract method not implemented: getTemplate`);
   }
+
 
   getElement() {
     if (!this._element) {
@@ -21,7 +23,18 @@ export default class AbstractView {
     return this._element;
   }
 
+
   removeElement() {
     this._element = null;
+  }
+
+
+  show() {
+    throw new Error(`Abstract method not implemented: show`);
+  }
+
+
+  hide() {
+    throw new Error(`Abstract method not implemented: hide`);
   }
 }

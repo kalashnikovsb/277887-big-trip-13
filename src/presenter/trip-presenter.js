@@ -67,7 +67,7 @@ export default class TripPresenter {
   }
 
 
-  createEvent() {
+  createEvent(callback) {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     if (this._noEventsNoticeComponent) {
@@ -76,7 +76,7 @@ export default class TripPresenter {
       this._renderNoEventsNotice();
       this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
     }
-    this._eventNewPresenter.init();
+    this._eventNewPresenter.init(callback);
   }
 
 

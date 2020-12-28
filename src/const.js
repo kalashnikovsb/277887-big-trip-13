@@ -104,6 +104,12 @@ const FilterType = {
   PAST: `past`
 };
 
+const MenuItem = {
+  ADD_NEW_EVENT: `ADD_NEW_EVENT`,
+  TABLE: `TABLE`,
+  STATS: `STATS`
+};
+
 export {
   EVENTS_COUNT,
   DAYS_GAP,
@@ -122,5 +128,6 @@ export {
   SortType,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  MenuItem
 };

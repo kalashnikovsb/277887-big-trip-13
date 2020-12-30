@@ -24,7 +24,8 @@ export default class MenuView extends AbstractView {
 
   _menuClickHandler(evt) {
     evt.preventDefault();
-    this._callback.menuClick(evt.target.dataset.MenuItem);
+    this.setMenuItem(evt.target.dataset.menuItem);
+    this._callback.menuClick(evt.target.dataset.menuItem);
   }
 
 
@@ -34,21 +35,25 @@ export default class MenuView extends AbstractView {
   }
 
 
-  // Сброс класса выделяющего как активный у всех ссылок
-  resetAllActivesMenuItems() {
-    const allItems = this.getElement().querySelectorAll(`.trip-tabs__btn`);
-    Array.from(allItems).forEach((item) => {
-      item.classList.remove(`trip-tabs__btn--active`);
-    });
-  }
-
-
   setMenuItem(menuItem) {
-    this.resetAllActivesMenuItems();
     const item = this.getElement().querySelector(`[data-menu-item=${menuItem}]`);
+
+    this._resetMenuItemsActiveClass();
+
+    if (menuItem === MenuItem.ADD_NEW_EVENT) {
+      this.getElement().querySelector(`[data-menu-item=${MenuItem.TABLE}]`).classList.add(`trip-tabs__btn--active`);
+    }
 
     if (item !== null) {
       item.classList.add(`trip-tabs__btn--active`);
     }
+  }
+
+
+  _resetMenuItemsActiveClass() {
+    const items = this.getElement().querySelectorAll(`.trip-tabs__btn`);
+    items.forEach((item) => {
+      item.classList.remove(`trip-tabs__btn--active`);
+    });
   }
 }

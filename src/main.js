@@ -1,5 +1,5 @@
-import {EVENTS_COUNT, RenderPosition, MenuItem} from "./const.js";
-import {render} from "./utils/render-utils.js";
+import {EVENTS_COUNT, RenderPosition, MenuItem, UpdateType, FilterType} from "./const.js";
+import {render, remove} from "./utils/render-utils.js";
 import {generateEventsMock} from "./mock/generate-events-mock.js";
 import TripPresenter from "./presenter/trip-presenter.js";
 import EventsModel from "./model/events-model.js";
@@ -25,29 +25,35 @@ const tripPresenter = new TripPresenter(tripHeaderElement, tripEventsElement, ev
 const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, eventsModel);
 
 const menuComponent = new MenuView();
-
 render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
 
-const eventNewClose = () => {
-  menuComponent.resetAllActivesMenuItems();
-  menuComponent.setMenuItem(MenuItem.TABLE);
-};
+const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+
+addNewEventButton.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  menuClickHandler(MenuItem.ADD_NEW_EVENT);
+});
+
+let statisticComponent = null;
 
 const menuClickHandler = (menuItem) => {
   switch (menuItem) {
     case MenuItem.ADD_NEW_EVENT:
-      // Скрыть статистику
-      // Показать доску
-      tripPresenter.createEvent(eventNewClose);
-      menuComponent.getElement().querySelector(`[data-menu-item=${MenuItem.TABLE}]`).classList.add(`trip-tabs__btn--active`);
+      remove(statisticComponent);
+      tripPresenter.destroy();
+      filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+      menuComponent.setMenuItem(menuItem);
+      tripPresenter.createEvent(menuClickHandler);
       break;
     case MenuItem.TABLE:
-      // Показать доску
-      // Скрыть статистику
+      remove(statisticComponent);
+      filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
       break;
     case MenuItem.STATS:
-      // Скрыть доску
-      // Показать статистику
+      tripPresenter.destroy();
+      remove(statisticComponent);
+      statisticComponent = new StatisticView(eventsModel.getEvents());
+      render(tripEventsElement, statisticComponent, RenderPosition.AFTEREND);
       break;
   }
 };
@@ -56,8 +62,3 @@ menuComponent.setMenuClickHandler(menuClickHandler);
 
 filterPresenter.init();
 tripPresenter.init();
-
-// document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-//   evt.preventDefault();
-//   tripPresenter.createEvent();
-// });

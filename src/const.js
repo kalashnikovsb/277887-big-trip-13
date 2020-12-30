@@ -1,4 +1,4 @@
-const EVENTS_COUNT = 10;
+const EVENTS_COUNT = 20;
 const DAYS_GAP = 7;
 const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const MIN_OPTIONS_COUNT = 0;
@@ -110,6 +110,8 @@ const MenuItem = {
   STATS: `STATS`
 };
 
+const BAR_HEIGHT = 100;
+
 export {
   EVENTS_COUNT,
   DAYS_GAP,
@@ -129,5 +131,6 @@ export {
   UserAction,
   UpdateType,
   FilterType,
-  MenuItem
+  MenuItem,
+  BAR_HEIGHT
 };

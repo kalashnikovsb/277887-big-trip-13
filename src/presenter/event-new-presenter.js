@@ -18,11 +18,10 @@ export default class EventNew {
 
 
   init(callback) {
-    this._destroyCallback = callback;
     if (this._eventEditComponent !== null) {
       return;
     }
-    this._eventEditComponent = new EventEditView();
+    this._eventEditComponent = new EventEditView(callback);
     this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
     this._eventEditComponent.setDeleteClickHandler(this._deleteClickHandler);
 
@@ -36,11 +35,6 @@ export default class EventNew {
     if (this._eventEditComponent === null) {
       return;
     }
-
-    if (this._destroyCallback !== null) {
-      this._destroyCallback();
-    }
-
     remove(this._eventEditComponent);
     this._eventEditComponent = null;
     document.removeEventListener(`keydown`, this._escKeyDownHandler);

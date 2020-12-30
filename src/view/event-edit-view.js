@@ -408,6 +408,13 @@ export default class EventEditView extends SmartView {
       this._datepicker.destroy();
       this._datepicker = null;
     }
+    if (this._startDatepicker) {
+      this._startDatepicker.destroy();
+      this._startDatepicker = null;
+    }
+    if (this._endDatepicker) {
+      this._endDatepicker.destroy();
+      this._endDatepicker = null;
+    }
   }
-
 }

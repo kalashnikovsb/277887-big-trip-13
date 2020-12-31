@@ -130,11 +130,11 @@ const getEventEditTemplate = (data) => {
   // Преобразую строку к числу, отсекаю дробную часть
   // Не позволяю числу быть ниже 0, либо отрицательным, либо быть NaN
   price = Math.trunc(Number(price));
-  if (Boolean(price) !== true || price < 0) {
+  if (!!price === false || price < 0) {
     price = ``;
   }
 
-  const isSubmitDisable = !(price >= 0) || Boolean(destination) === false;
+  const isSubmitDisable = price < 0 || !!destination === false;
 
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
   const optionsBlock = getOptionsList(type, options);

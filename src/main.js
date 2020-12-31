@@ -37,23 +37,29 @@ addNewEventButton.addEventListener(`click`, (evt) => {
   menuClickHandler(MenuItem.ADD_NEW_EVENT);
 });
 
-let statisticComponent = new StatisticView(tripEventsElement, eventsModel.getEvents());
+
+let statisticComponent = null;
 
 const menuClickHandler = (menuItem) => {
+
   switch (menuItem) {
     case MenuItem.ADD_NEW_EVENT:
       statisticComponent.hide();
       tripPresenter.show();
       menuComponent.setMenuItem(menuItem);
       tripPresenter.createEvent(menuClickHandler);
+      filterPresenter.filtersEnable();
       break;
     case MenuItem.TABLE:
       statisticComponent.hide();
       tripPresenter.show();
+      filterPresenter.filtersEnable();
       break;
     case MenuItem.STATS:
+      statisticComponent = new StatisticView(tripEventsElement, eventsModel.getEvents());
       tripPresenter.hide();
       statisticComponent.show();
+      filterPresenter.filtersDisable();
       break;
   }
 };

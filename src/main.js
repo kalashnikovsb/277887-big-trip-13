@@ -39,8 +39,13 @@ addNewEventButton.addEventListener(`click`, (evt) => {
 
 
 let statisticComponent = null;
+let currentMenuItem = MenuItem.TABLE;
 
 const menuClickHandler = (menuItem) => {
+  if (currentMenuItem === menuItem) {
+    return;
+  }
+  currentMenuItem = menuItem;
 
   switch (menuItem) {
     case MenuItem.ADD_NEW_EVENT:

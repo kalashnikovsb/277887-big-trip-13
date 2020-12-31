@@ -265,7 +265,17 @@ export default class TripPresenter {
   }
 
 
-  destroy() {
+  // destroy() {
+  //   this._clearTrip({resetSortType: true, keepTripInformation: true});
+  // }
+
+
+  show() {
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  }
+
+
+  hide() {
     this._clearTrip({resetSortType: true, keepTripInformation: true});
   }
 }

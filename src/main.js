@@ -1,5 +1,7 @@
-import {EVENTS_COUNT, RenderPosition, MenuItem, UpdateType, FilterType} from "./const.js";
-import {render, remove} from "./utils/render-utils.js";
+// import {EVENTS_COUNT, RenderPosition, MenuItem, UpdateType, FilterType} from "./const.js";
+import {EVENTS_COUNT, RenderPosition, MenuItem} from "./const.js";
+// import {render, remove} from "./utils/render-utils.js";
+import {render} from "./utils/render-utils.js";
 import {generateEventsMock} from "./mock/generate-events-mock.js";
 import TripPresenter from "./presenter/trip-presenter.js";
 import EventsModel from "./model/events-model.js";
@@ -24,6 +26,7 @@ const filtersHeaderElement = document.querySelector(`.trip-main__trip-controls .
 const tripPresenter = new TripPresenter(tripHeaderElement, tripEventsElement, eventsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, eventsModel);
 
+
 const menuComponent = new MenuView();
 render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
 
@@ -34,26 +37,23 @@ addNewEventButton.addEventListener(`click`, (evt) => {
   menuClickHandler(MenuItem.ADD_NEW_EVENT);
 });
 
-let statisticComponent = null;
+let statisticComponent = new StatisticView(tripEventsElement, eventsModel.getEvents());
 
 const menuClickHandler = (menuItem) => {
   switch (menuItem) {
     case MenuItem.ADD_NEW_EVENT:
-      remove(statisticComponent);
-      tripPresenter.destroy();
-      filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+      statisticComponent.hide();
+      tripPresenter.show();
       menuComponent.setMenuItem(menuItem);
       tripPresenter.createEvent(menuClickHandler);
       break;
     case MenuItem.TABLE:
-      remove(statisticComponent);
-      filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+      statisticComponent.hide();
+      tripPresenter.show();
       break;
     case MenuItem.STATS:
-      tripPresenter.destroy();
-      remove(statisticComponent);
-      statisticComponent = new StatisticView(eventsModel.getEvents());
-      render(tripEventsElement, statisticComponent, RenderPosition.AFTEREND);
+      tripPresenter.hide();
+      statisticComponent.show();
       break;
   }
 };

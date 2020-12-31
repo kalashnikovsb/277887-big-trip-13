@@ -1,8 +1,9 @@
 import {getEventsPricesByTypes, geteventsCountsByTypes, getDurationsByTypes} from "../utils/statistic-utils.js";
+import {render, remove} from "../utils/render-utils.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./smart-view.js";
-import {BAR_HEIGHT, TYPES} from "../const.js";
+import {BAR_HEIGHT, TYPES, RenderPosition} from "../const.js";
 
 
 const renderMoneyChart = (moneyCtx, events) => {
@@ -235,8 +236,9 @@ const getStatisticTemplate = () => {
 
 
 export default class StatisticView extends SmartView {
-  constructor(events) {
+  constructor(container, events) {
     super();
+    this._container = container;
     this._events = events;
 
     this._moneyChart = null;
@@ -281,5 +283,20 @@ export default class StatisticView extends SmartView {
       this._typesChart = null;
       this._timeChart = null;
     }
+  }
+
+
+  show() {
+    if (document.querySelector(`.statistics`)) {
+      return;
+    }
+    this.removeElement();
+    this._setCharts();
+    render(this._container, this.getElement(), RenderPosition.AFTEREND);
+  }
+
+
+  hide() {
+    remove(this);
   }
 }

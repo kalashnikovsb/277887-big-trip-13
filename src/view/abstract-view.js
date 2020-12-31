@@ -24,4 +24,14 @@ export default class AbstractView {
   removeElement() {
     this._element = null;
   }
+
+
+  show() {
+    throw new Error(`Abstract method not implemented: show`);
+  }
+
+
+  hide() {
+    throw new Error(`Abstract method not implemented: hide`);
+  }
 }

@@ -112,28 +112,6 @@ export default class TripPresenter {
   }
 
 
-  _modelEventHandler(updateType, data) {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        // Тип обновления соответствует только добавлению задачи в избранное и перерисовывает только текущую задачу
-        this._eventPresenter[data.id].init(data);
-        break;
-      case UpdateType.MINOR:
-        // Тип обновления срабатывает при фильтрации. Перерисовывает только список событий и сбрасывает тип сортировки
-        this._clearTrip({resetSortType: true});
-        this._renderTrip();
-        break;
-      case UpdateType.MAJOR:
-        // Тип обновления срабатывает при добавлении/удалении задачи и срабатывании отправки формы редактирования любой задачи
-        // Тип заставляет перерисовываться всему путешествию, а не только списку событий, т.к. изменения в любой задаче могут повлиять
-        // на информацию обо всем путешествии в шапке страницы
-        this._clearTrip();
-        this._renderTrip();
-        break;
-    }
-  }
-
-
   _getEvents() {
     const filterType = this._filterModel.getFilter();
     const events = this._eventsModel.getEvents();
@@ -171,7 +149,7 @@ export default class TripPresenter {
   }
 
 
-  _clearTrip({resetSortType = false} = {}) {
+  _clearTrip({resetSortType = false, keepTripInformation = false} = {}) {
     if (this._eventNewPresenter) {
       this._eventNewPresenter.destroy();
     }
@@ -187,7 +165,10 @@ export default class TripPresenter {
       this._noEventsNoticeComponent = null;
     }
 
-    remove(this._tripInformationComponent);
+    if (keepTripInformation === false) {
+      remove(this._tripInformationComponent);
+    }
+
     remove(this._sortingComponent);
     remove(this._eventsListComponent);
 
@@ -259,5 +240,42 @@ export default class TripPresenter {
     this._currentSortType = sortType;
     this._clearTrip();
     this._renderTrip();
+  }
+
+
+  _modelEventHandler(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // Тип обновления соответствует только добавлению задачи в избранное и перерисовывает только текущую задачу
+        this._eventPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        // Тип обновления срабатывает при фильтрации. Перерисовывает только список событий и сбрасывает тип сортировки
+        this._clearTrip({resetSortType: true});
+        this._renderTrip();
+        break;
+      case UpdateType.MAJOR:
+        // Тип обновления срабатывает при добавлении/удалении задачи и срабатывании отправки формы редактирования любой задачи
+        // Тип заставляет перерисовываться всему путешествию, а не только списку событий, т.к. изменения в любой задаче могут повлиять
+        // на информацию обо всем путешествии в шапке страницы
+        this._clearTrip();
+        this._renderTrip();
+        break;
+    }
+  }
+
+
+  // destroy() {
+  //   this._clearTrip({resetSortType: true, keepTripInformation: true});
+  // }
+
+
+  show() {
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  }
+
+
+  hide() {
+    this._clearTrip({resetSortType: true, keepTripInformation: true});
   }
 }

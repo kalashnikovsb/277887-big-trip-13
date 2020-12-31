@@ -17,11 +17,11 @@ export default class EventNew {
   }
 
 
-  init() {
+  init(callback) {
     if (this._eventEditComponent !== null) {
       return;
     }
-    this._eventEditComponent = new EventEditView();
+    this._eventEditComponent = new EventEditView(callback);
     this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
     this._eventEditComponent.setDeleteClickHandler(this._deleteClickHandler);
 

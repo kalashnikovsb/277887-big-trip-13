@@ -72,4 +72,13 @@ export default class FilterPresenter {
       }
     ];
   }
+
+
+  filtersDisable() {
+    this._filterComponent.filtersDisable();
+  }
+
+  filtersEnable() {
+    this._filterComponent.filtersEnable();
+  }
 }

@@ -2,6 +2,7 @@ import {TYPES, DESTINATIONS, EMPTY_EVENT, TYPES_TO_OPTIONS, DESTINATIONS_TO_DESC
 import {addOrDeleteOption} from "../utils/events-utils.js";
 import SmartView from "./smart-view.js";
 import dayjs from "dayjs";
+import he from "he";
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
@@ -105,10 +106,35 @@ const getDescription = (destination, description, photos) => {
 };
 
 
-const getEventEditTemplate = (data) => {
-  const {type, destination, timeStart, timeEnd, price, options, description, photos} = data;
+// Функция проверки на существование введенного пункта назначения
+const isDestinationCorrect = (destination) => {
+  let isExist = false;
+  DESTINATIONS.forEach((city) => {
+    if (city === destination) {
+      isExist = true;
+    }
+  });
+  return isExist;
+};
 
-  const isSubmitDisable = !(Number(price) && price >= 0) || Boolean(destination) === false;
+
+const getEventEditTemplate = (data) => {
+  const {type, timeStart, timeEnd, options, description, photos} = data;
+  let {price, destination} = data;
+
+  // Проверка на существование введенного пункта назначения
+  if (isDestinationCorrect(destination) === false) {
+    destination = ``;
+  }
+
+  // Преобразую строку к числу, отсекаю дробную часть
+  // Не позволяю числу быть ниже 0, либо отрицательным, либо быть NaN
+  price = Math.trunc(Number(price));
+  if (isNaN(price) || price <= 0) {
+    price = ``;
+  }
+
+  const isSubmitDisable = !price || !destination;
 
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
   const optionsBlock = getOptionsList(type, options);
@@ -120,7 +146,7 @@ const getEventEditTemplate = (data) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${getType(type)}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${getType(type).toLowerCase()}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
           ${getEventTypesList(type)}
@@ -130,7 +156,7 @@ const getEventEditTemplate = (data) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${getType(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${getDestination(destination)}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(getDestination(destination))}" list="destination-list-1">
           ${getDestinationsList()}
         </div>
 
@@ -382,6 +408,13 @@ export default class EventEditView extends SmartView {
       this._datepicker.destroy();
       this._datepicker = null;
     }
+    if (this._startDatepicker) {
+      this._startDatepicker.destroy();
+      this._startDatepicker = null;
+    }
+    if (this._endDatepicker) {
+      this._endDatepicker.destroy();
+      this._endDatepicker = null;
+    }
   }
-
 }

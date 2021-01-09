@@ -1,6 +1,4 @@
-// import {EVENTS_COUNT, RenderPosition, MenuItem, UpdateType, FilterType} from "./const.js";
 import {EVENTS_COUNT, RenderPosition, MenuItem} from "./const.js";
-// import {render, remove} from "./utils/render-utils.js";
 import {render} from "./utils/render-utils.js";
 import {generateEventsMock} from "./mock/generate-events-mock.js";
 import TripPresenter from "./presenter/trip-presenter.js";
@@ -9,6 +7,16 @@ import MenuView from "./view/menu-view.js";
 import FilterPresenter from "./presenter/filter-presenter.js";
 import FilterModel from "./model/filter-model.js";
 import StatisticView from "./view/statistic-view.js";
+import Api from "./api.js";
+
+const AUTHORIZATION = `Basic bF9cd7jfN8cP2qk6h`;
+const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getEvents().then((events) => {
+  console.log(events);
+});
 
 const events = new Array(EVENTS_COUNT).fill().map(generateEventsMock);
 const eventsCopy = events.slice();

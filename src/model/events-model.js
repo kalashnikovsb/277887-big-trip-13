@@ -1,3 +1,4 @@
+import {getClientOptions, getClientPhotos} from "../utils/api-utils.js";
 import Observer from "../utils/observer.js";
 
 export default class EventsModel extends Observer {
@@ -50,5 +51,33 @@ export default class EventsModel extends Observer {
       ...this._events.slice(index + 1)
     ];
     this._notify(updateType, update);
+  }
+
+
+  static adaptToClient(event) {
+    const adaptedEvent = Object.assign(
+        {},
+        event,
+        {
+          id: event.id,
+          type: event.type,
+          destination: event.destination.name,
+          description: event.destination.description,
+          options: getClientOptions(event.offers.slice()),
+          price: event.base_price,
+          // photos: getClientPhotos(event.destination.pictures.slice()),
+          timeStart: event.date_from !== null ? new Date(event.date_from) : new Date(),
+          timeEnd: event.date_to !== null ? new Date(event.date_to) : new Date(),
+          isFavorite: event.is_favorite
+        }
+    );
+
+    delete adaptedEvent.base_price;
+    delete adaptedEvent.date_from;
+    delete adaptedEvent.date_to;
+    delete adaptedEvent.is_favorite;
+    delete adaptedEvent.offers;
+
+    return adaptedEvent;
   }
 }

@@ -65,8 +65,8 @@ const getOptionsList = (type, options) => {
       return (option.name === constOption.name) ? true : false;
     });
     return `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.id}-1" type="checkbox" name="event-offer-${constOption.id}" data-name="${constOption.name}" ${isChecked ? `checked` : ``}>
-      <label class="event__offer-label" for="event-offer-${constOption.id}-1">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1" type="checkbox" name="event-offer-${constOption.id}" data-name="${constOption.name}" ${isChecked ? `checked` : ``}>
+      <label class="event__offer-label" for="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1">
         <span class="event__offer-title">${constOption.name}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${constOption.price}</span>

@@ -22,7 +22,7 @@ export default class Api {
   getEvents() {
     return this._load({url: `points`})
       .then(Api.toJSON)
-      .then((events) => events.map(EventsModel.adaptToClient));
+      .then((events) => events.map(EventsModel.adaptEventsToClient));
   }
 
 
@@ -30,7 +30,7 @@ export default class Api {
     return this._load({
       url: `points/${event.id}`,
       method: Method.PUT,
-      body: JSON.stringify(EventsModel.adaptToServer(event)),
+      body: JSON.stringify(EventsModel.adaptEventsToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
     .then(Api.toJSON)
@@ -70,5 +70,24 @@ export default class Api {
 
   static catchError(err) {
     throw err;
+  }
+
+
+
+
+
+
+
+  getDestinations() {
+    return this._load({url: `destinations`})
+      .then(Api.toJSON)
+      .then((destinations) => destinations.map(EventsModel.adaptDestinationsToClient));
+  }
+
+
+  getOptions() {
+    return this._load({url: `offers`})
+      .then(Api.toJSON)
+      .then((options) => options.map(EventsModel.adaptOptionsToClient));
   }
 }

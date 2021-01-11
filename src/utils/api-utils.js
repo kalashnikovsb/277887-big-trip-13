@@ -17,6 +17,11 @@ const getClientOptions = (serverOptions) => {
 };
 
 
+const getServerOptions = (clientOptions) => {
+
+};
+
+
 const getClientPhotos = (serverPhotos) => {
 
 };

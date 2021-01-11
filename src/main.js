@@ -1,4 +1,4 @@
-import {EVENTS_COUNT, RenderPosition, MenuItem} from "./const.js";
+import {EVENTS_COUNT, RenderPosition, MenuItem, UpdateType} from "./const.js";
 import {render} from "./utils/render-utils.js";
 import {generateEventsMock} from "./mock/generate-events-mock.js";
 import TripPresenter from "./presenter/trip-presenter.js";
@@ -12,19 +12,41 @@ import Api from "./api.js";
 const AUTHORIZATION = `Basic bF9cd7jfN8cP2qk6h`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
-const api = new Api(END_POINT, AUTHORIZATION);
 
-api.getEvents().then((events) => {
-  console.log(events);
-});
 
 const events = new Array(EVENTS_COUNT).fill().map(generateEventsMock);
-const eventsCopy = events.slice();
+
+
+
+
+// const api = new Api(END_POINT, AUTHORIZATION);
+
+// api.getEvents()
+//   .then((events) => {
+//     eventsModel.setEvents(UpdateType.INIT, events);
+//   })
+//   // .catch(() => {
+//   //   eventsModel.setEvents(UpdateType.INIT, []);
+//   // });
+//
+// api.getDestinations()
+//   .then((destinations) => {
+//     eventsModel.setDestinations(destinations);
+//   });
+//
+// api.getOptions()
+//   .then((options) => {
+//     eventsModel.setOptions(options);
+//   });
+
+
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
 
-eventsModel.setEvents(eventsCopy);
+eventsModel.setEvents(events);
+
+
 
 const tripHeaderElement = document.querySelector(`.trip-main`);
 const tripEventsElement = document.querySelector(`.trip-events`);
@@ -33,7 +55,6 @@ const filtersHeaderElement = document.querySelector(`.trip-main__trip-controls .
 
 const tripPresenter = new TripPresenter(tripHeaderElement, tripEventsElement, eventsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, eventsModel);
-
 
 const menuComponent = new MenuView();
 render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);

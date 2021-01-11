@@ -54,7 +54,7 @@ export default class EventsModel extends Observer {
   }
 
 
-  static adaptToClient(event) {
+  static adaptEventsToClient(event) {
     const adaptedEvent = Object.assign(
         {},
         event,
@@ -63,7 +63,7 @@ export default class EventsModel extends Observer {
           type: event.type,
           destination: event.destination.name,
           description: event.destination.description,
-          options: getClientOptions(event.offers.slice()),
+          // options: getClientOptions(event.offers.slice()),
           price: event.base_price,
           // photos: getClientPhotos(event.destination.pictures.slice()),
           timeStart: event.date_from !== null ? new Date(event.date_from) : new Date(),
@@ -79,5 +79,85 @@ export default class EventsModel extends Observer {
     delete adaptedEvent.offers;
 
     return adaptedEvent;
+  }
+
+
+  static adaptEventsToServer(event) {
+    const adaptedEvent = Object.assign(
+      {},
+      event,
+      {
+        base_price: event.price,
+        date_from: event.timeStart.toISOString(),
+        date_to: event.timeEnd.toISOString(),
+        is_favorite: event.isFavorite,
+        type: event.type,
+        id: event.id,
+        //destination:
+        //offers:
+      }
+    );
+
+    delete adaptedEvent.price;
+    delete adaptedEvent.timeStart;
+    delete adaptedEvent.timeEnd;
+    delete adaptedEvent.isFavorite;
+
+    return adaptedEvent;
+  }
+
+
+
+
+
+
+
+
+  setDestinations(destinations) {
+    this._destinations = destinations.slice();
+  }
+
+
+  getDestinations() {
+    return this._destinations;
+  }
+
+
+  setOptions(options) {
+    this._options = options.slice();
+  }
+
+
+  getOptions() {
+    return this._options;
+  }
+
+
+  static adaptDestinationsToClient(destination) {
+    let result = {};
+    result.name = destination.name;
+    result.description = destination.description;
+    result.pictures = [];
+    for (let serverPicture of destination.pictures) {
+      let picture = {};
+      picture.src = serverPicture.src;
+      picture.alt = serverPicture.description;
+      result.pictures.push(picture);
+    }
+    return result;
+  }
+
+
+  static adaptOptionsToClient(option) {
+    let result = {};
+    result.type = option.type;
+    result.offers = [];
+    for (let serverOffer of option.offers) {
+      let offer = {};
+      offer.name = serverOffer.title;
+      offer.price = serverOffer.price;
+      result.offers.push(offer);
+    }
+    return result;
   }
 }

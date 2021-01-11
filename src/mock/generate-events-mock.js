@@ -12,11 +12,13 @@ import {
 import {getRandomInteger, getRandomElement, getRandomItems} from "../utils/common-utils.js";
 import dayjs from "dayjs";
 
+
 // Прибавляет к текущему времени от -7 до 7 дней и от -30 до 30 минут
 const generateTimeStart = () => {
   let timeStart = dayjs().add(getRandomInteger(-DAYS_GAP, DAYS_GAP), `day`).add(getRandomInteger(-30, 30), `minute`);
   return timeStart.toDate();
 };
+
 
 // Прибавляет от 15 минут до 2х суток к начальному времени
 const generateTimeEnd = (timeStart) => {
@@ -25,6 +27,17 @@ const generateTimeEnd = (timeStart) => {
   const timeEnd = dayjs(timeStart).add(getRandomInteger(minDuration, maxDuration), `minute`);
   return timeEnd.toDate();
 };
+
+
+const getDescription = (destination) => {
+  return DESTINATIONS_TO_DESCRIPTIONS[destination];
+};
+
+
+const getOptions = (type) => {
+  return getRandomItems(TYPES_TO_OPTIONS[type], MIN_OPTIONS_COUNT, MAX_OPTIONS_COUNT);
+};
+
 
 const generatePhotos = () => {
   let count = getRandomInteger(MIN_PHOTOS_COUNT, MAX_PHOTOS_COUNT);
@@ -35,15 +48,9 @@ const generatePhotos = () => {
   return photosList;
 };
 
-const getDescription = (destination) => {
-  return DESTINATIONS_TO_DESCRIPTIONS[destination];
-};
-
-const getOptions = (type) => {
-  return getRandomItems(TYPES_TO_OPTIONS[type], MIN_OPTIONS_COUNT, MAX_OPTIONS_COUNT);
-};
 
 export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 
 export const generateEventsMock = () => {
   const type = getRandomElement(TYPES);
@@ -51,10 +58,10 @@ export const generateEventsMock = () => {
   const description = getDescription(destination);
   const options = getOptions(type);
   const price = getRandomInteger(10, 100);
-  const photos = generatePhotos();
   const timeStart = generateTimeStart();
   const timeEnd = generateTimeEnd(timeStart);
   const isFavorite = Boolean(getRandomInteger(0, 1));
+  const photos = generatePhotos();
 
   return {
     id: generateId(),
@@ -62,8 +69,8 @@ export const generateEventsMock = () => {
     destination,
     description,
     options,
-    price,
     photos,
+    price,
     timeStart,
     timeEnd,
     isFavorite,

@@ -15,6 +15,117 @@ const DESTINATIONS = [
   `Saint-Petersburg`,
 ];
 
+// const DESTINATIONS = [
+//   {
+//     name: `Moscow`,
+//     description: `MoscowMoscow`,
+//     pictures: [
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `MoscowMoscow`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `MoscowMoscow`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `MoscowMoscow`
+//       },
+//     ]
+//   },
+//   {
+//     name: `Saint-Petersburg`,
+//     description: `Saint-PetersburgSaint-Petersburg`,
+//     pictures: [
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `Saint-PetersburgSaint-Petersburg`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `Saint-PetersburgSaint-Petersburg`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `Saint-PetersburgSaint-Petersburg`
+//       },
+//     ]
+//   },
+//   {
+//     name: `Khabarovsk`,
+//     description: `KhabarovskKhabarovsk`,
+//     pictures: [
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `KhabarovskKhabarovsk`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `KhabarovskKhabarovsk`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `KhabarovskKhabarovsk`
+//       },
+//     ]
+//   },
+//   {
+//     name: `Krasnoyarsk`,
+//     description: `KrasnoyarskKrasnoyarsk`,
+//     pictures: [
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `KrasnoyarskKrasnoyarsk`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `KrasnoyarskKrasnoyarsk`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `KrasnoyarskKrasnoyarsk`
+//       },
+//     ]
+//   },
+//   {
+//     name: `Omsk`,
+//     description: `OmskOmsk`,
+//     pictures: [
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `OmskOmsk`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `OmskOmsk`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `OmskOmsk`
+//       },
+//     ]
+//   },
+//   {
+//     name: `Irkutsk`,
+//     description: `IrkutskIrkutsk`,
+//     pictures: [
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `IrkutskIrkutsk`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `IrkutskIrkutsk`
+//       },
+//       {
+//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+//         alt: `IrkutskIrkutsk`
+//       },
+//     ]
+//   }
+// ];
+
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Fusce tristique felis at fermentum pharetra.`,
@@ -95,7 +206,8 @@ const UserAction = {
 const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  INIT: `INIT`
 };
 
 const FilterType = {

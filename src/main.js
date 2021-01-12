@@ -13,33 +13,33 @@ const AUTHORIZATION = `Basic bF9cd7jfN8cP2qk6h`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
 const events = new Array(EVENTS_COUNT).fill().map(generateEventsMock);
+const api = new Api(END_POINT, AUTHORIZATION);
 
-// const api = new Api(END_POINT, AUTHORIZATION);
+api.getEvents()
+  .then((events) => {
+    console.log(`Получил данные`);
+    eventsModel.setEvents(UpdateType.INIT, events);
+  })
+  .catch(() => {
+    console.log(`Не получил данные`);
+    eventsModel.setEvents(UpdateType.INIT, []);
+  });
 
-// api.getEvents()
-//   .then((events) => {
-//     eventsModel.setEvents(UpdateType.INIT, events);
-//   })
-//   // .catch(() => {
-//   //   eventsModel.setEvents(UpdateType.INIT, []);
-//   // });
-//
-// api.getDestinations()
-//   .then((destinations) => {
-//     eventsModel.setDestinations(destinations);
-//   });
-//
-// api.getOptions()
-//   .then((options) => {
-//     eventsModel.setOptions(options);
-//   });
+api.getDestinations()
+  .then((destinations) => {
+    eventsModel.setDestinations(destinations);
+  });
+
+api.getOptions()
+  .then((options) => {
+    eventsModel.setOptions(options);
+  });
+
+
+
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
-
-eventsModel.setEvents(events);
-eventsModel.setDestinations(DESTINATIONS);
-eventsModel.setOptions(OPTIONS);
 
 const tripHeaderElement = document.querySelector(`.trip-main`);
 const tripEventsElement = document.querySelector(`.trip-events`);

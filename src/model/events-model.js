@@ -8,8 +8,10 @@ export default class EventsModel extends Observer {
   }
 
 
-  setEvents(events) {
+  setEvents(updateType, events) {
+    console.log(events);
     this._events = events.slice();
+    this._notify(updateType);
   }
 
 
@@ -19,6 +21,7 @@ export default class EventsModel extends Observer {
 
 
   setDestinations(destinations) {
+    console.log(destinations);
     this._destinations = destinations.slice();
   }
 
@@ -28,6 +31,8 @@ export default class EventsModel extends Observer {
 
 
   setOptions(options) {
+    console.log(options);
+    console.log(destinations);
     this._options = options.slice();
   }
 
@@ -81,9 +86,8 @@ export default class EventsModel extends Observer {
           type: event.type,
           destination: event.destination.name,
           description: event.destination.description,
-          // options: getClientOptions(event.offers.slice()),
+          options: getClientOptions(event.offers.slice()),
           price: event.base_price,
-          // photos: getClientPhotos(event.destination.pictures.slice()),
           timeStart: event.date_from !== null ? new Date(event.date_from) : new Date(),
           timeEnd: event.date_to !== null ? new Date(event.date_to) : new Date(),
           isFavorite: event.is_favorite
@@ -108,11 +112,15 @@ export default class EventsModel extends Observer {
           base_price: event.price,
           date_from: event.timeStart.toISOString(),
           date_to: event.timeEnd.toISOString(),
+          destination: {
+            name: event.destination,
+            description: event.description
+          },
+          id: event.id,
           is_favorite: event.isFavorite,
           type: event.type,
-          id: event.id,
-          // destination:
-          // offers:
+          destination: event.destination,
+          offers: event.options.slice()
         }
     );
 
@@ -120,6 +128,7 @@ export default class EventsModel extends Observer {
     delete adaptedEvent.timeStart;
     delete adaptedEvent.timeEnd;
     delete adaptedEvent.isFavorite;
+    delete adaptedEvent.options;
 
     return adaptedEvent;
   }

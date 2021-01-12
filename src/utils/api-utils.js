@@ -7,7 +7,7 @@ const getClientOptions = (serverOptions) => {
 
   for (let serverItem of serverOptions) {
     let clientItem = {
-      name: serverItem.title,
+      title: serverItem.title,
       price: serverItem.price,
     };
     clientOptions.push(Object.assign({}, clientItem));

@@ -3,8 +3,6 @@ import {
   TYPES,
   MIN_OPTIONS_COUNT,
   MAX_OPTIONS_COUNT,
-  MIN_PHOTOS_COUNT,
-  MAX_PHOTOS_COUNT,
   DESTINATIONS,
   OPTIONS
 } from "../const.js";
@@ -34,31 +32,21 @@ const getOptions = (type) => {
 };
 
 
-const generatePhotos = () => {
-  let count = getRandomInteger(MIN_PHOTOS_COUNT, MAX_PHOTOS_COUNT);
-  let photosList = [];
-  while (count--) {
-    photosList.push(`http://picsum.photos/248/152?r=${Math.random()}`);
-  }
-  return photosList;
-};
-
-
 export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 
 export const generateEventsMock = () => {
   const destinationPoint = getRandomElement(DESTINATIONS);
 
+
   const type = getRandomElement(TYPES);
   const destination = destinationPoint.name;
-  const description = destinationPoint.description;
+  const description = DESTINATIONS.find((item) => item.name === destination).name;
   const options = getOptions(type);
   const price = getRandomInteger(10, 100);
   const timeStart = generateTimeStart();
   const timeEnd = generateTimeEnd(timeStart);
   const isFavorite = Boolean(getRandomInteger(0, 1));
-  const photos = generatePhotos();
 
   return {
     id: generateId(),
@@ -66,7 +54,6 @@ export const generateEventsMock = () => {
     destination,
     description,
     options,
-    photos,
     price,
     timeStart,
     timeEnd,

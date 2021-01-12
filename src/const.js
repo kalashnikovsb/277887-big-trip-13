@@ -3,8 +3,6 @@ const DAYS_GAP = 7;
 const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const MIN_OPTIONS_COUNT = 0;
 const MAX_OPTIONS_COUNT = 4;
-const MIN_PHOTOS_COUNT = 0;
-const MAX_PHOTOS_COUNT = 10;
 
 
 const DESTINATIONS = [
@@ -387,8 +385,6 @@ export {
   TYPES,
   MIN_OPTIONS_COUNT,
   MAX_OPTIONS_COUNT,
-  MIN_PHOTOS_COUNT,
-  MAX_PHOTOS_COUNT,
   DESTINATIONS,
   DESCRIPTIONS,
   OPTIONS,

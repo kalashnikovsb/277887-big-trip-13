@@ -207,7 +207,6 @@ export default class EventEditView extends SmartView {
         description: ``,
         options: [],
         price: ``,
-        photos: [],
         timeStart: new Date(),
         timeEnd: new Date(),
         isFavorite: false,

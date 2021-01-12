@@ -265,10 +265,9 @@ export default class TripPresenter {
         this._clearTrip();
         this._renderTrip();
         break;
-      // case UpdateType.INIT:
-      //   console.log(this._eventsModel.getEvents());
-      //   this._renderTrip();
-      //   break;
+      case UpdateType.INIT:
+        this._renderTrip();
+        break;
     }
   }
 

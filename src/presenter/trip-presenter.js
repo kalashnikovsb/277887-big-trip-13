@@ -17,6 +17,10 @@ export default class TripPresenter {
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
 
+    // Беру из модели загруженные пункты назначения и опции
+    this._availableDestinations = this._getDestinations();
+    this._availableOptions = this._getOptions();
+
     this._eventPresenter = {};
     this._currentSortType = SortType.DEFAULT;
 
@@ -63,7 +67,7 @@ export default class TripPresenter {
     this._renderEventsList();
     this._renderEvents();
 
-    this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+    this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._availableDestinations, this._availableOptions);
   }
 
 
@@ -74,7 +78,7 @@ export default class TripPresenter {
       this._removeNoEventsNoticeIfExist();
       this._renderEventsList();
       this._renderNoEventsNotice();
-      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._availableDestinations, this._availableOptions);
     }
     this._eventNewPresenter.init();
   }
@@ -134,18 +138,18 @@ export default class TripPresenter {
   }
 
 
-  // get currentSortType() {
-  //   return this._currentSortType;
-  // }
-  //
-  //
-  // set currentSortType(value) {
-  //   this._currentSortType = value;
-  // }
-
-
   _getAllEvents() {
     return this._eventsModel.getEvents();
+  }
+
+
+  _getDestinations() {
+    return this._eventsModel.getDestinations();
+  }
+
+
+  _getOptions() {
+    return this._eventsModel.getOptions();
   }
 
 
@@ -179,7 +183,7 @@ export default class TripPresenter {
 
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventsListComponent, this._viewActionHandler, this._modeChangeHandler);
+    const eventPresenter = new EventPresenter(this._eventsListComponent, this._viewActionHandler, this._modeChangeHandler, this._availableDestinations, this._availableOptions);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }

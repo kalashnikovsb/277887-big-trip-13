@@ -3,17 +3,17 @@ import {render, remove} from "../utils/render-utils.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./smart-view.js";
-import {BAR_HEIGHT, TYPES, RenderPosition} from "../const.js";
+import {BAR_HEIGHT, RenderPosition} from "../const.js";
 
 
-const renderMoneyChart = (moneyCtx, events) => {
-  const eventsPricesByTypes = getEventsPricesByTypes(TYPES, events);
+const renderMoneyChart = (moneyCtx, events, types) => {
+  const eventsPricesByTypes = getEventsPricesByTypes(types, events);
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [...TYPES],
+      labels: [...types],
       datasets: [{
         data: [...eventsPricesByTypes],
         backgroundColor: `#ffffff`,
@@ -76,14 +76,14 @@ const renderMoneyChart = (moneyCtx, events) => {
 };
 
 
-const renderTypeChart = (typesCtx, events) => {
-  const eventsCountsByTypes = geteventsCountsByTypes(TYPES, events);
+const renderTypeChart = (typesCtx, events, types) => {
+  const eventsCountsByTypes = geteventsCountsByTypes(types, events);
 
   return new Chart(typesCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [...TYPES],
+      labels: [...types],
       datasets: [{
         data: [...eventsCountsByTypes],
         backgroundColor: `#ffffff`,
@@ -146,14 +146,14 @@ const renderTypeChart = (typesCtx, events) => {
 };
 
 
-const renderTimeChart = (timeCtx, events) => {
-  const durationsByTypes = getDurationsByTypes(TYPES, events);
+const renderTimeChart = (timeCtx, events, types) => {
+  const durationsByTypes = getDurationsByTypes(types, events);
 
   return new Chart(timeCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [...TYPES],
+      labels: [...types],
       datasets: [{
         data: [...durationsByTypes],
         backgroundColor: `#ffffff`,
@@ -236,16 +236,26 @@ const getStatisticTemplate = () => {
 
 
 export default class StatisticView extends SmartView {
-  constructor(container, events) {
+  constructor(container, events, availableOptions) {
     super();
     this._container = container;
     this._events = events;
+    this._types = this._getTypes(availableOptions);
 
     this._moneyChart = null;
     this._typesChart = null;
     this._timeChart = null;
 
     this._setCharts();
+  }
+
+
+  _getTypes(availableOptions) {
+    let result = [];
+    for (let type of availableOptions) {
+      result.push(type.type);
+    }
+    return result;
   }
 
 
@@ -269,9 +279,9 @@ export default class StatisticView extends SmartView {
     typesCtx.height = BAR_HEIGHT * 5;
     timeCtx.height = BAR_HEIGHT * 5;
 
-    this._moneyChart = renderMoneyChart(moneyCtx, this._events);
-    this._typesChart = renderTypeChart(typesCtx, this._events);
-    this._timeChart = renderTimeChart(timeCtx, this._events);
+    this._moneyChart = renderMoneyChart(moneyCtx, this._events, this._types);
+    this._typesChart = renderTypeChart(typesCtx, this._events, this._types);
+    this._timeChart = renderTimeChart(timeCtx, this._events, this._types);
   }
 
 

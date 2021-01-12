@@ -6,8 +6,7 @@ import {
   MIN_PHOTOS_COUNT,
   MAX_PHOTOS_COUNT,
   DESTINATIONS,
-  DESTINATIONS_TO_DESCRIPTIONS,
-  TYPES_TO_OPTIONS
+  OPTIONS
 } from "../const.js";
 import {getRandomInteger, getRandomElement, getRandomItems} from "../utils/common-utils.js";
 import dayjs from "dayjs";
@@ -29,13 +28,9 @@ const generateTimeEnd = (timeStart) => {
 };
 
 
-const getDescription = (destination) => {
-  return DESTINATIONS_TO_DESCRIPTIONS[destination];
-};
-
-
 const getOptions = (type) => {
-  return getRandomItems(TYPES_TO_OPTIONS[type], MIN_OPTIONS_COUNT, MAX_OPTIONS_COUNT);
+  const availableOptions = OPTIONS.find((option) => option.type === type).offers.slice();
+  return getRandomItems(availableOptions, MIN_OPTIONS_COUNT, MAX_OPTIONS_COUNT);
 };
 
 
@@ -53,9 +48,11 @@ export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10)
 
 
 export const generateEventsMock = () => {
+  const destinationPoint = getRandomElement(DESTINATIONS);
+
   const type = getRandomElement(TYPES);
-  const destination = getRandomElement(DESTINATIONS);
-  const description = getDescription(destination);
+  const destination = destinationPoint.name;
+  const description = destinationPoint.description;
   const options = getOptions(type);
   const price = getRandomInteger(10, 100);
   const timeStart = generateTimeStart();

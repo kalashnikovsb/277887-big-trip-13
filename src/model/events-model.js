@@ -18,6 +18,24 @@ export default class EventsModel extends Observer {
   }
 
 
+  setDestinations(destinations) {
+    this._destinations = destinations.slice();
+  }
+
+  getDestinations() {
+    return this._destinations;
+  }
+
+
+  setOptions(options) {
+    this._options = options.slice();
+  }
+
+  getOptions() {
+    return this._options;
+  }
+
+
   updateEvent(updateType, update) {
     const index = this._events.findIndex((event) => event.id === update.id);
     if (index === -1) {
@@ -84,18 +102,18 @@ export default class EventsModel extends Observer {
 
   static adaptEventsToServer(event) {
     const adaptedEvent = Object.assign(
-      {},
-      event,
-      {
-        base_price: event.price,
-        date_from: event.timeStart.toISOString(),
-        date_to: event.timeEnd.toISOString(),
-        is_favorite: event.isFavorite,
-        type: event.type,
-        id: event.id,
-        //destination:
-        //offers:
-      }
+        {},
+        event,
+        {
+          base_price: event.price,
+          date_from: event.timeStart.toISOString(),
+          date_to: event.timeEnd.toISOString(),
+          is_favorite: event.isFavorite,
+          type: event.type,
+          id: event.id,
+          // destination:
+          // offers:
+        }
     );
 
     delete adaptedEvent.price;
@@ -105,13 +123,6 @@ export default class EventsModel extends Observer {
 
     return adaptedEvent;
   }
-
-
-
-
-
-
-
 
   setDestinations(destinations) {
     this._destinations = destinations.slice();

@@ -1,10 +1,8 @@
-import {TYPES, DESTINATIONS, EMPTY_EVENT, TYPES_TO_OPTIONS, DESTINATIONS_TO_DESCRIPTIONS} from "../const.js";
 import {addOrDeleteOption} from "../utils/events-utils.js";
 import SmartView from "./smart-view.js";
 import dayjs from "dayjs";
 import he from "he";
 import flatpickr from "flatpickr";
-
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 
@@ -24,13 +22,13 @@ const getDestination = (destination) => {
 };
 
 
-const getEventTypesList = (currentType) => {
+const getEventTypesList = (currentType, availableTypes) => {
   currentType = currentType.toLowerCase();
 
   return `<div class="event__type-list">
     <fieldset class="event__type-group">
       <legend class="visually-hidden">Event type</legend>
-  ${TYPES.map((type) => {
+  ${availableTypes.map((type) => {
     type = type.toLowerCase();
     return `<div class="event__type-item">
       <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${type === currentType ? `checked` : ``}>
@@ -42,32 +40,34 @@ const getEventTypesList = (currentType) => {
 };
 
 
-const getDestinationsList = () => {
+const getDestinationsList = (availableDestinations) => {
   return `<datalist id="destination-list-1">
-  ${DESTINATIONS.map((destination) => {
-    return `<option value="${destination}"></option>`;
+  ${availableDestinations.map((destination) => {
+    return `<option value="${destination.name}"></option>`;
   }).join(``)}
   </datalist>
   `;
 };
 
 
-const getOptionsList = (type, options) => {
+const getOptionsList = (type, options, availableOptions) => {
   if (Boolean(type) === false) {
     return ``;
   }
 
+  const availableOptionsByType = availableOptions.find((option) => option.type === type).offers;
+
   return `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-  ${TYPES_TO_OPTIONS[type].map((constOption) => {
+  ${availableOptionsByType.map((constOption) => {
     const isChecked = options.some((option) => {
-      return (option.name === constOption.name) ? true : false;
+      return (option.title === constOption.title) ? true : false;
     });
     return `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1" type="checkbox" name="event-offer-${constOption.id}" data-name="${constOption.name}" ${isChecked ? `checked` : ``}>
-      <label class="event__offer-label" for="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1">
-        <span class="event__offer-title">${constOption.name}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.title.toLowerCase().split(` `).join(`-`)}-1" type="checkbox" name="event-offer-${constOption.title.toLowerCase().split(` `).join(`-`)}" data-name="${constOption.title}" ${isChecked ? `checked` : ``}>
+      <label class="event__offer-label" for="event-offer-${constOption.title.toLowerCase().split(` `).join(`-`)}-1">
+        <span class="event__offer-title">${constOption.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${constOption.price}</span>
       </label>
@@ -84,8 +84,8 @@ const getPhotos = (photos) => {
   }
   return `<div class="event__photos-container">
     <div class="event__photos-tape">
-  ${photos.map((src) => {
-    return `<img class="event__photo" src="${src}" alt="Event photo">`;
+  ${photos.map((photo) => {
+    return `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`;
   }).join(``)}
     </div>
   </div>
@@ -93,24 +93,26 @@ const getPhotos = (photos) => {
 };
 
 
-const getDescription = (destination, description, photos) => {
+const getDescription = (destination, availableDestinations) => {
+  const checkedDestination = availableDestinations.find((availableItem) => availableItem.name === destination);
+
   if (Boolean(destination) === false) {
     return ``;
   }
 
   return `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${DESTINATIONS_TO_DESCRIPTIONS[destination]}</p>
-    ${getPhotos(photos)}
+    <p class="event__destination-description">${checkedDestination.description}</p>
+    ${getPhotos(checkedDestination.pictures)}
   </section>`;
 };
 
 
 // Функция проверки на существование введенного пункта назначения
-const isDestinationCorrect = (destination) => {
+const isDestinationCorrect = (destination, availableDestinations) => {
   let isExist = false;
-  DESTINATIONS.forEach((city) => {
-    if (city === destination) {
+  availableDestinations.forEach((city) => {
+    if (city.name === destination) {
       isExist = true;
     }
   });
@@ -118,12 +120,12 @@ const isDestinationCorrect = (destination) => {
 };
 
 
-const getEventEditTemplate = (data) => {
-  const {type, timeStart, timeEnd, options, description, photos} = data;
+const getEventEditTemplate = (data, availableDestinations, availableOptions, availableTypes) => {
+  const {type, timeStart, timeEnd, options} = data;
   let {price, destination} = data;
 
   // Проверка на существование введенного пункта назначения
-  if (isDestinationCorrect(destination) === false) {
+  if (isDestinationCorrect(destination, availableDestinations) === false) {
     destination = ``;
   }
 
@@ -137,8 +139,8 @@ const getEventEditTemplate = (data) => {
   const isSubmitDisable = !price || !destination;
 
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
-  const optionsBlock = getOptionsList(type, options);
-  const descriptionBlock = getDescription(destination, description, photos);
+  const optionsBlock = getOptionsList(type, options, availableOptions);
+  const descriptionBlock = getDescription(destination, availableDestinations);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -149,7 +151,7 @@ const getEventEditTemplate = (data) => {
             <img class="event__type-icon" width="17" height="17" src="img/icons/${getType(type).toLowerCase()}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-          ${getEventTypesList(type)}
+          ${getEventTypesList(type, availableTypes)}
         </div>
 
         <div class="event__field-group  event__field-group--destination">
@@ -157,7 +159,7 @@ const getEventEditTemplate = (data) => {
             ${getType(type)}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(getDestination(destination))}" list="destination-list-1">
-          ${getDestinationsList()}
+          ${getDestinationsList(availableDestinations)}
         </div>
 
         <div class="event__field-group  event__field-group--time">
@@ -192,8 +194,26 @@ const getEventEditTemplate = (data) => {
 
 
 export default class EventEditView extends SmartView {
-  constructor(event = EMPTY_EVENT) {
+  constructor(event, availableDestinations, availableOptions) {
     super();
+    this._destinations = availableDestinations.slice();
+    this._options = availableOptions.slice();
+    this._types = this.getTypes(this._options);
+
+    if (!!event === false) {
+      event = {
+        type: this._types[0], // Flight по умолчанию
+        destination: ``,
+        description: ``,
+        options: [],
+        price: ``,
+        photos: [],
+        timeStart: new Date(),
+        timeEnd: new Date(),
+        isFavorite: false,
+      };
+    }
+
     this._data = EventEditView.parseEventToData(event);
 
     this._startDatepicker = null;
@@ -215,8 +235,17 @@ export default class EventEditView extends SmartView {
   }
 
 
+  getTypes(options) {
+    let result = [];
+    for (let option of options) {
+      result.push(option.type);
+    }
+    return result;
+  }
+
+
   getTemplate() {
-    return getEventEditTemplate(this._data);
+    return getEventEditTemplate(this._data, this._destinations, this._options, this._types);
   }
 
 
@@ -309,10 +338,19 @@ export default class EventEditView extends SmartView {
     evt.preventDefault();
     // Нахожу имя опции на которой был клик
     const optionName = evt.target.dataset.name;
-    // Нахожу среди всех доступных опций ту на которой был клик
-    const optionCurrent = TYPES_TO_OPTIONS[this._data.type].find((item) => item.name === optionName);
+    // Ищу среди всех опций для всех типов ту на которой был сделан клик
+    let result = null;
+    for (let option of this._options) {
+      let availableOptions = option.offers;
+      for (let offer of availableOptions) {
+        if (offer.title === optionName) {
+          result = offer;
+        }
+      }
+    }
     // Добавляю опцию если ее нет, либо удаляю если она уже есть
-    this._data.options = addOrDeleteOption(this._data.options, optionCurrent);
+    this._data.options = addOrDeleteOption(this._data.options, result);
+
     this.updateData({
       options: this._data.options
     });

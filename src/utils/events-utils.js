@@ -25,7 +25,7 @@ const addOrDeleteOption = (array, option) => {
   let result = array.slice();
   let index = -1;
   result.forEach((item, i) => {
-    if (item.name === option.name) {
+    if (item.title === option.title) {
       index = i;
     }
   });

@@ -2,129 +2,121 @@ const EVENTS_COUNT = 10;
 const DAYS_GAP = 7;
 const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const MIN_OPTIONS_COUNT = 0;
-const MAX_OPTIONS_COUNT = 3;
+const MAX_OPTIONS_COUNT = 4;
 const MIN_PHOTOS_COUNT = 0;
 const MAX_PHOTOS_COUNT = 10;
 
-const DESTINATIONS = [
-  `Moscow`,
-  `Khabarovsk`,
-  `Krasnoyarsk`,
-  `Omsk`,
-  `Irkutsk`,
-  `Saint-Petersburg`,
-];
 
-// const DESTINATIONS = [
-//   {
-//     name: `Moscow`,
-//     description: `MoscowMoscow`,
-//     pictures: [
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `MoscowMoscow`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `MoscowMoscow`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `MoscowMoscow`
-//       },
-//     ]
-//   },
-//   {
-//     name: `Saint-Petersburg`,
-//     description: `Saint-PetersburgSaint-Petersburg`,
-//     pictures: [
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `Saint-PetersburgSaint-Petersburg`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `Saint-PetersburgSaint-Petersburg`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `Saint-PetersburgSaint-Petersburg`
-//       },
-//     ]
-//   },
-//   {
-//     name: `Khabarovsk`,
-//     description: `KhabarovskKhabarovsk`,
-//     pictures: [
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `KhabarovskKhabarovsk`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `KhabarovskKhabarovsk`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `KhabarovskKhabarovsk`
-//       },
-//     ]
-//   },
-//   {
-//     name: `Krasnoyarsk`,
-//     description: `KrasnoyarskKrasnoyarsk`,
-//     pictures: [
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `KrasnoyarskKrasnoyarsk`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `KrasnoyarskKrasnoyarsk`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `KrasnoyarskKrasnoyarsk`
-//       },
-//     ]
-//   },
-//   {
-//     name: `Omsk`,
-//     description: `OmskOmsk`,
-//     pictures: [
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `OmskOmsk`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `OmskOmsk`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `OmskOmsk`
-//       },
-//     ]
-//   },
-//   {
-//     name: `Irkutsk`,
-//     description: `IrkutskIrkutsk`,
-//     pictures: [
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `IrkutskIrkutsk`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `IrkutskIrkutsk`
-//       },
-//       {
-//         src: `http://picsum.photos/300/200?r=0.0762563005163317`,
-//         alt: `IrkutskIrkutsk`
-//       },
-//     ]
-//   }
-// ];
+const DESTINATIONS = [
+  {
+    name: `Moscow`,
+    description: `MoscowMoscow`,
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `MoscowMoscow`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `MoscowMoscow`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `MoscowMoscow`
+      },
+    ]
+  },
+  {
+    name: `Saint-Petersburg`,
+    description: `Saint-PetersburgSaint-Petersburg`,
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `Saint-PetersburgSaint-Petersburg`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `Saint-PetersburgSaint-Petersburg`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `Saint-PetersburgSaint-Petersburg`
+      },
+    ]
+  },
+  {
+    name: `Khabarovsk`,
+    description: `KhabarovskKhabarovsk`,
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `KhabarovskKhabarovsk`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `KhabarovskKhabarovsk`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `KhabarovskKhabarovsk`
+      },
+    ]
+  },
+  {
+    name: `Krasnoyarsk`,
+    description: `KrasnoyarskKrasnoyarsk`,
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `KrasnoyarskKrasnoyarsk`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `KrasnoyarskKrasnoyarsk`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `KrasnoyarskKrasnoyarsk`
+      },
+    ]
+  },
+  {
+    name: `Omsk`,
+    description: `OmskOmsk`,
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `OmskOmsk`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `OmskOmsk`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `OmskOmsk`
+      },
+    ]
+  },
+  {
+    name: `Irkutsk`,
+    description: `IrkutskIrkutsk`,
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `IrkutskIrkutsk`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `IrkutskIrkutsk`
+      },
+      {
+        src: `http://picsum.photos/300/200?r=0.0762563005163317`,
+        description: `IrkutskIrkutsk`
+      },
+    ]
+  }
+];
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -135,54 +127,219 @@ const DESCRIPTIONS = [
   `Nunc fermentum tortor ac porta dapibus.`
 ];
 
-// Каждому городу свое описание
-const DESTINATIONS_TO_DESCRIPTIONS = {
-  [DESTINATIONS[0]]: [DESCRIPTIONS[0]],
-  [DESTINATIONS[1]]: [DESCRIPTIONS[1]],
-  [DESTINATIONS[2]]: [DESCRIPTIONS[2]],
-  [DESTINATIONS[3]]: [DESCRIPTIONS[3]],
-  [DESTINATIONS[4]]: [DESCRIPTIONS[4]],
-  [DESTINATIONS[5]]: [DESCRIPTIONS[5]],
-};
 
 const OPTIONS = [
-  {name: `Add luggage`, price: 50},
-  {name: `Switch to Comfort`, price: 80},
-  {name: `Add meal`, price: 15},
-  {name: `Choose seats`, price: 5},
-  {name: `Travel by train`, price: 40},
-  {name: `Order Uber`, price: 20},
-  {name: `Rent a car`, price: 200},
-  {name: `Add breakfast`, price: 50},
-  {name: `Book tickets`, price: 40},
-  {name: `Lunch in city`, price: 30},
+  {
+    type: `Taxi`,
+    offers: [
+      {
+        title: `1`,
+        price: 1
+      },
+      {
+        title: `2`,
+        price: 2
+      },
+      {
+        title: `3`,
+        price: 3
+      },
+      {
+        title: `4`,
+        price: 4
+      },
+    ]
+  },
+  {
+    type: `Bus`,
+    offers: [
+      {
+        title: `5`,
+        price: 5
+      },
+      {
+        title: `6`,
+        price: 6
+      },
+      {
+        title: `7`,
+        price: 7
+      },
+      {
+        title: `8`,
+        price: 8
+      },
+    ]
+  },
+  {
+    type: `Train`,
+    offers: [
+      {
+        title: `9`,
+        price: 9
+      },
+      {
+        title: `10`,
+        price: 10
+      },
+      {
+        title: `11`,
+        price: 11
+      },
+      {
+        title: `12`,
+        price: 12
+      },
+    ]
+  },
+  {
+    type: `Ship`,
+    offers: [
+      {
+        title: `13`,
+        price: 13
+      },
+      {
+        title: `14`,
+        price: 14
+      },
+      {
+        title: `15`,
+        price: 15
+      },
+      {
+        title: `16`,
+        price: 16
+      },
+    ]
+  },
+  {
+    type: `Transport`,
+    offers: [
+      {
+        title: `17`,
+        price: 17
+      },
+      {
+        title: `18`,
+        price: 18
+      },
+      {
+        title: `19`,
+        price: 19
+      },
+      {
+        title: `20`,
+        price: 20
+      },
+    ]
+  },
+  {
+    type: `Drive`,
+    offers: [
+      {
+        title: `21`,
+        price: 21
+      },
+      {
+        title: `22`,
+        price: 22
+      },
+      {
+        title: `23`,
+        price: 23
+      },
+      {
+        title: `24`,
+        price: 24
+      },
+    ]
+  },
+  {
+    type: `Flight`,
+    offers: [
+      {
+        title: `25`,
+        price: 25
+      },
+      {
+        title: `26`,
+        price: 26
+      },
+      {
+        title: `27`,
+        price: 27
+      },
+      {
+        title: `28`,
+        price: 28
+      },
+    ]
+  },
+  {
+    type: `Check-in`,
+    offers: [
+      {
+        title: `29`,
+        price: 29
+      },
+      {
+        title: `30`,
+        price: 30
+      },
+      {
+        title: `31`,
+        price: 31
+      },
+      {
+        title: `32`,
+        price: 32
+      },
+    ]
+  },
+  {
+    type: `Sightseeing`,
+    offers: [
+      {
+        title: `33`,
+        price: 33
+      },
+      {
+        title: `34`,
+        price: 34
+      },
+      {
+        title: `35`,
+        price: 35
+      },
+      {
+        title: `36`,
+        price: 36
+      },
+    ]
+  },
+  {
+    type: `Restaurant`,
+    offers: [
+      {
+        title: `37`,
+        price: 37
+      },
+      {
+        title: `38`,
+        price: 38
+      },
+      {
+        title: `39`,
+        price: 39
+      },
+      {
+        title: `40`,
+        price: 40
+      },
+    ]
+  },
 ];
-
-// Каждому событию доступны свои рандомные опции, но выбраны будут рандомные
-const TYPES_TO_OPTIONS = {
-  [TYPES[0]]: [OPTIONS[0], OPTIONS[1], OPTIONS[2], OPTIONS[3]],
-  [TYPES[1]]: [OPTIONS[1], OPTIONS[2], OPTIONS[3]],
-  [TYPES[2]]: [OPTIONS[2], OPTIONS[3], OPTIONS[4], OPTIONS[5]],
-  [TYPES[3]]: [OPTIONS[3], OPTIONS[4], OPTIONS[5]],
-  [TYPES[4]]: [OPTIONS[4], OPTIONS[5], OPTIONS[6], OPTIONS[7]],
-  [TYPES[5]]: [OPTIONS[5], OPTIONS[6], OPTIONS[7]],
-  [TYPES[6]]: [OPTIONS[6], OPTIONS[7], OPTIONS[8], OPTIONS[9]],
-  [TYPES[7]]: [OPTIONS[7], OPTIONS[8], OPTIONS[9]],
-  [TYPES[8]]: [OPTIONS[8], OPTIONS[9], OPTIONS[0], OPTIONS[1]],
-  [TYPES[9]]: [OPTIONS[9], OPTIONS[0], OPTIONS[1]],
-};
-
-const EMPTY_EVENT = {
-  type: TYPES[6], // Flight по умолчанию
-  destination: ``,
-  description: ``,
-  options: [],
-  price: ``,
-  photos: [],
-  timeStart: new Date(),
-  timeEnd: new Date(),
-  isFavorite: false,
-};
 
 const RenderPosition = {
   BEFOREBEGIN: `beforebegin`,
@@ -234,10 +391,7 @@ export {
   MAX_PHOTOS_COUNT,
   DESTINATIONS,
   DESCRIPTIONS,
-  DESTINATIONS_TO_DESCRIPTIONS,
   OPTIONS,
-  TYPES_TO_OPTIONS,
-  EMPTY_EVENT,
   RenderPosition,
   SortType,
   UserAction,

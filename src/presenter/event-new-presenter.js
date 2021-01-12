@@ -4,10 +4,13 @@ import {remove, render} from "../utils/render-utils.js";
 import {RenderPosition, UserAction, UpdateType} from "../const.js";
 
 
-export default class EventNew {
-  constructor(eventsListContainer, changeData) {
+export default class EventNewPresenter {
+  constructor(eventsListContainer, changeData, availableDestinations, availableOptions) {
     this._eventsListContainer = eventsListContainer;
     this._changeData = changeData;
+
+    this._availableDestinations = availableDestinations;
+    this._availableOptions = availableOptions;
 
     this._eventEditComponent = null;
 
@@ -21,7 +24,7 @@ export default class EventNew {
     if (this._eventEditComponent !== null) {
       return;
     }
-    this._eventEditComponent = new EventEditView(callback);
+    this._eventEditComponent = new EventEditView(callback, this._availableDestinations, this._availableOptions);
     this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
     this._eventEditComponent.setDeleteClickHandler(this._deleteClickHandler);
 

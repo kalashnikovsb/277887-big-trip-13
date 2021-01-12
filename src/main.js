@@ -1,4 +1,4 @@
-import {EVENTS_COUNT, RenderPosition, MenuItem, UpdateType} from "./const.js";
+import {EVENTS_COUNT, RenderPosition, MenuItem, UpdateType, DESTINATIONS, OPTIONS} from "./const.js";
 import {render} from "./utils/render-utils.js";
 import {generateEventsMock} from "./mock/generate-events-mock.js";
 import TripPresenter from "./presenter/trip-presenter.js";
@@ -12,12 +12,7 @@ import Api from "./api.js";
 const AUTHORIZATION = `Basic bF9cd7jfN8cP2qk6h`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
-
-
 const events = new Array(EVENTS_COUNT).fill().map(generateEventsMock);
-
-
-
 
 // const api = new Api(END_POINT, AUTHORIZATION);
 
@@ -39,14 +34,12 @@ const events = new Array(EVENTS_COUNT).fill().map(generateEventsMock);
 //     eventsModel.setOptions(options);
 //   });
 
-
-
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
 
 eventsModel.setEvents(events);
-
-
+eventsModel.setDestinations(DESTINATIONS);
+eventsModel.setOptions(OPTIONS);
 
 const tripHeaderElement = document.querySelector(`.trip-main`);
 const tripEventsElement = document.querySelector(`.trip-events`);
@@ -90,7 +83,7 @@ const menuClickHandler = (menuItem) => {
       filterPresenter.filtersEnable();
       break;
     case MenuItem.STATS:
-      statisticComponent = new StatisticView(tripEventsElement, eventsModel.getEvents());
+      statisticComponent = new StatisticView(tripEventsElement, eventsModel.getEvents(), eventsModel.getOptions());
       tripPresenter.hide();
       statisticComponent.show();
       filterPresenter.filtersDisable();

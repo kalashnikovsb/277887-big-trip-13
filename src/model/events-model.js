@@ -116,7 +116,7 @@ export default class EventsModel extends Observer {
           },
           id: event.id,
           is_favorite: event.isFavorite,
-          type: event.type,
+          type: event.type.toLowerCase(),
           offers: getServerOptions(event.options.slice())
         }
     );

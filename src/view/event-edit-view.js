@@ -55,19 +55,19 @@ const getOptionsList = (type, options, availableOptions) => {
     return ``;
   }
 
-  const availableOptionsByType = availableOptions.find((option) => option.type === type).offers;
+  const availableOptionsByType = availableOptions.find((option) => option.type === type.toLowerCase()).offers;
 
   return `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
   ${availableOptionsByType.map((constOption) => {
     const isChecked = options.some((option) => {
-      return (option.title === constOption.title) ? true : false;
+      return (option.name === constOption.name) ? true : false;
     });
     return `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.title.toLowerCase().split(` `).join(`-`)}-1" type="checkbox" name="event-offer-${constOption.title.toLowerCase().split(` `).join(`-`)}" data-name="${constOption.title}" ${isChecked ? `checked` : ``}>
-      <label class="event__offer-label" for="event-offer-${constOption.title.toLowerCase().split(` `).join(`-`)}-1">
-        <span class="event__offer-title">${constOption.title}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1" type="checkbox" name="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}" data-name="${constOption.name}" ${isChecked ? `checked` : ``}>
+      <label class="event__offer-label" for="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1">
+        <span class="event__offer-title">${constOption.name}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${constOption.price}</span>
       </label>
@@ -342,7 +342,7 @@ export default class EventEditView extends SmartView {
     for (let option of this._options) {
       let availableOptions = option.offers;
       for (let offer of availableOptions) {
-        if (offer.title === optionName) {
+        if (offer.name === optionName) {
           result = offer;
         }
       }

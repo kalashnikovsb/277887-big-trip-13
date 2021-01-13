@@ -7,7 +7,7 @@ const getClientOptions = (serverOptions) => {
 
   for (let serverItem of serverOptions) {
     let clientItem = {
-      title: serverItem.title,
+      name: serverItem.title,
       price: serverItem.price,
     };
     clientOptions.push(Object.assign({}, clientItem));
@@ -17,14 +17,4 @@ const getClientOptions = (serverOptions) => {
 };
 
 
-const getServerOptions = (clientOptions) => {
-
-};
-
-
-const getClientPhotos = (serverPhotos) => {
-
-};
-
-
-export {getClientOptions, getClientPhotos};
+export {getClientOptions};

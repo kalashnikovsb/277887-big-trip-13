@@ -1,6 +1,5 @@
-import {EVENTS_COUNT, RenderPosition, MenuItem, UpdateType, DESTINATIONS, OPTIONS} from "./const.js";
+import {RenderPosition, MenuItem, UpdateType} from "./const.js";
 import {render} from "./utils/render-utils.js";
-import {generateEventsMock} from "./mock/generate-events-mock.js";
 import TripPresenter from "./presenter/trip-presenter.js";
 import EventsModel from "./model/events-model.js";
 import MenuView from "./view/menu-view.js";
@@ -12,31 +11,34 @@ import Api from "./api.js";
 const AUTHORIZATION = `Basic bF9cd7jfN8cP2qk6h`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
-const events = new Array(EVENTS_COUNT).fill().map(generateEventsMock);
 const api = new Api(END_POINT, AUTHORIZATION);
 
-api.getEvents()
-  .then((events) => {
-    console.log(`Получил данные`);
-    eventsModel.setEvents(UpdateType.INIT, events);
-  })
-  .catch(() => {
-    console.log(`Не получил данные`);
-    eventsModel.setEvents(UpdateType.INIT, []);
+// api.getEvents()
+//   .then((events) => {
+//     console.log(`Получил данные`);
+//     eventsModel.setEvents(UpdateType.INIT, events);
+//   })
+//   .catch(() => {
+//     console.log(`Не получил данные`);
+//     eventsModel.setEvents(UpdateType.INIT, []);
+//   });
+//
+// api.getDestinations()
+//   .then((destinations) => {
+//     eventsModel.setDestinations(destinations);
+//   });
+//
+// api.getOptions()
+//   .then((options) => {
+//     eventsModel.setOptions(options);
+//   });
+
+Promise.all([api.getEvents(), api.getDestinations(), api.getOptions()])
+  .then((result) => {
+    eventsModel.setOptions(result[2]);
+    eventsModel.setDestinations(result[1]);
+    eventsModel.setEvents(UpdateType.INIT, result[0]);
   });
-
-api.getDestinations()
-  .then((destinations) => {
-    eventsModel.setDestinations(destinations);
-  });
-
-api.getOptions()
-  .then((options) => {
-    eventsModel.setOptions(options);
-  });
-
-
-
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();

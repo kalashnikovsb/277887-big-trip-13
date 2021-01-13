@@ -1,4 +1,4 @@
-import {getClientOptions, getClientPhotos} from "../utils/api-utils.js";
+import {getClientOptions} from "../utils/api-utils.js";
 import Observer from "../utils/observer.js";
 
 export default class EventsModel extends Observer {
@@ -9,7 +9,6 @@ export default class EventsModel extends Observer {
 
 
   setEvents(updateType, events) {
-    console.log(events);
     this._events = events.slice();
     this._notify(updateType);
   }
@@ -21,7 +20,6 @@ export default class EventsModel extends Observer {
 
 
   setDestinations(destinations) {
-    console.log(destinations);
     this._destinations = destinations.slice();
   }
 
@@ -31,8 +29,6 @@ export default class EventsModel extends Observer {
 
 
   setOptions(options) {
-    console.log(options);
-    console.log(destinations);
     this._options = options.slice();
   }
 
@@ -119,7 +115,6 @@ export default class EventsModel extends Observer {
           id: event.id,
           is_favorite: event.isFavorite,
           type: event.type,
-          destination: event.destination,
           offers: event.options.slice()
         }
     );

@@ -26,7 +26,7 @@ const getOptions = (options) => {
   return `<ul class="event__selected-offers">
     ${options.map((option) => {
     return `<li class="event__offer">
-      <span class="event__offer-title">${option.title}</span>
+      <span class="event__offer-title">${option.name}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${option.price}</span>
     </li>`;

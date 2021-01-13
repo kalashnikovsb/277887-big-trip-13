@@ -12,11 +12,12 @@ import EventNewPresenter from "./event-new-presenter.js";
 
 
 export default class TripPresenter {
-  constructor(headerContainer, boardContainer, eventsModel, filterModel) {
+  constructor(headerContainer, boardContainer, eventsModel, filterModel, api) {
     this._headerContainerElement = headerContainer;
     this._boardContainerElement = boardContainer;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
+    this._api = api;
 
     this._eventPresenter = {};
     this._currentSortType = SortType.DEFAULT;
@@ -110,6 +111,11 @@ export default class TripPresenter {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this._eventsModel.updateEvent(updateType, update);
+
+        this._api.updateEvent(update).then((response) => {
+          this._eventsModel.updateEvent(updateType, response);
+        });
+
         break;
       case UserAction.ADD_EVENT:
         this._eventsModel.addEvent(updateType, update);

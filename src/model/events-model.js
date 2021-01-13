@@ -1,4 +1,4 @@
-import {getClientOptions} from "../utils/api-utils.js";
+import {getClientOptions, getServerOptions} from "../utils/api-utils.js";
 import Observer from "../utils/observer.js";
 
 export default class EventsModel extends Observer {
@@ -82,6 +82,7 @@ export default class EventsModel extends Observer {
           type: event.type,
           destination: event.destination.name,
           description: event.destination.description,
+          pictures: event.destination.pictures.slice(),
           options: getClientOptions(event.offers.slice()),
           price: event.base_price,
           timeStart: event.date_from !== null ? new Date(event.date_from) : new Date(),
@@ -105,17 +106,18 @@ export default class EventsModel extends Observer {
         {},
         event,
         {
-          base_price: event.price,
+          base_price: Number(event.price),
           date_from: event.timeStart.toISOString(),
           date_to: event.timeEnd.toISOString(),
           destination: {
             name: event.destination,
-            description: event.description
+            description: event.description,
+            pictures: event.pictures.slice()
           },
           id: event.id,
           is_favorite: event.isFavorite,
           type: event.type,
-          offers: event.options.slice()
+          offers: getServerOptions(event.options.slice())
         }
     );
 
@@ -124,6 +126,8 @@ export default class EventsModel extends Observer {
     delete adaptedEvent.timeEnd;
     delete adaptedEvent.isFavorite;
     delete adaptedEvent.options;
+    delete adaptedEvent.description;
+    delete adaptedEvent.pictures;
 
     return adaptedEvent;
   }

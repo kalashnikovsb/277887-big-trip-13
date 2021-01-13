@@ -5,7 +5,7 @@ const getEventsPricesByTypes = (types, events) => {
     let result = 0;
     events.forEach((event) => {
       if (event.type === type) {
-        result += event.price;
+        result += Number(event.price);
         event.options.forEach((option) => {
           result += option.price;
         });

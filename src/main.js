@@ -11,7 +11,21 @@ import Api from "./api.js";
 const AUTHORIZATION = `Basic bF9cd7jfN8cP2qk6h`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
+const tripHeaderElement = document.querySelector(`.trip-main`);
+const tripEventsElement = document.querySelector(`.trip-events`);
+const menuHeaderElement = document.querySelector(`.trip-main__trip-controls .visually-hidden:nth-of-type(1)`);
+const filtersHeaderElement = document.querySelector(`.trip-main__trip-controls .visually-hidden:nth-of-type(2)`);
+
 const api = new Api(END_POINT, AUTHORIZATION);
+
+const eventsModel = new EventsModel();
+const filterModel = new FilterModel();
+
+const tripPresenter = new TripPresenter(tripHeaderElement, tripEventsElement, eventsModel, filterModel, api);
+const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, eventsModel);
+
+const menuComponent = new MenuView();
+render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
 
 // api.getEvents()
 //   .then((events) => {
@@ -33,28 +47,16 @@ const api = new Api(END_POINT, AUTHORIZATION);
 //     eventsModel.setOptions(options);
 //   });
 
+const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+addNewEventButton.setAttribute(`disabled`, ``);
+
 Promise.all([api.getEvents(), api.getDestinations(), api.getOptions()])
   .then((result) => {
     eventsModel.setOptions(result[2]);
     eventsModel.setDestinations(result[1]);
     eventsModel.setEvents(UpdateType.INIT, result[0]);
+    addNewEventButton.removeAttribute(`disabled`);
   });
-
-const eventsModel = new EventsModel();
-const filterModel = new FilterModel();
-
-const tripHeaderElement = document.querySelector(`.trip-main`);
-const tripEventsElement = document.querySelector(`.trip-events`);
-const menuHeaderElement = document.querySelector(`.trip-main__trip-controls .visually-hidden:nth-of-type(1)`);
-const filtersHeaderElement = document.querySelector(`.trip-main__trip-controls .visually-hidden:nth-of-type(2)`);
-
-const tripPresenter = new TripPresenter(tripHeaderElement, tripEventsElement, eventsModel, filterModel);
-const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, eventsModel);
-
-const menuComponent = new MenuView();
-render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
-
-const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
 
 addNewEventButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();

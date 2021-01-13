@@ -5,16 +5,35 @@ const getClientOptions = (serverOptions) => {
     return clientOptions;
   }
 
-  for (let serverItem of serverOptions) {
-    let clientItem = {
-      name: serverItem.title,
-      price: serverItem.price,
+  for (let serverOption of serverOptions) {
+    let clientOption = {
+      name: serverOption.title,
+      price: serverOption.price,
     };
-    clientOptions.push(Object.assign({}, clientItem));
+    clientOptions.push(Object.assign({}, clientOption));
   }
 
   return clientOptions;
 };
 
 
-export {getClientOptions};
+const getServerOptions = (clientOptions) => {
+  let serverOptions = [];
+
+  if (clientOptions.length === 0) {
+    return serverOptions;
+  }
+
+  for (let clientOption of clientOptions) {
+    let serverOption = {
+      title: clientOption.name,
+      price: clientOption.price,
+    };
+    serverOptions.push(Object.assign({}, serverOption));
+  }
+
+  return serverOptions;
+};
+
+
+export {getClientOptions, getServerOptions};

@@ -5,6 +5,7 @@ import TripInformationView from "../view/trip-information-view.js";
 import SortingView from "../view/sorting-view.js";
 import EventsListView from "../view/events-list-view.js";
 import NoEventsNoticeView from "../view/no-events-notice-view.js";
+import LoadingView from "../view/loading-view.js";
 import EventPresenter from "../presenter/event-presenter.js";
 import {filter} from "../utils/filter.js";
 import EventNewPresenter from "./event-new-presenter.js";
@@ -19,6 +20,9 @@ export default class TripPresenter {
 
     this._eventPresenter = {};
     this._currentSortType = SortType.DEFAULT;
+
+    this._isLoading = true;
+    this._loadingComponent = new LoadingView();
 
     this._tripEventsElement = document.querySelector(`.trip-events`);
 
@@ -41,6 +45,11 @@ export default class TripPresenter {
 
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     // При каждой перерисовке устанавливается текущий тип фильтрации
     // чтобы при его изменении сбрасывать сортировку
     this._currentFilterType = this._filterModel.getFilter();
@@ -210,6 +219,11 @@ export default class TripPresenter {
   }
 
 
+  _renderLoading() {
+    render(this._boardContainerElement, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
+
+
   _renderNoEventsNotice() {
     if (this._noEventsNoticeComponent) {
       return;
@@ -262,6 +276,8 @@ export default class TripPresenter {
         this._renderTrip();
         break;
       case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderTrip();
         break;
     }

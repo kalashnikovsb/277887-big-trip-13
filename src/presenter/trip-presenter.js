@@ -5,20 +5,25 @@ import TripInformationView from "../view/trip-information-view.js";
 import SortingView from "../view/sorting-view.js";
 import EventsListView from "../view/events-list-view.js";
 import NoEventsNoticeView from "../view/no-events-notice-view.js";
+import LoadingView from "../view/loading-view.js";
 import EventPresenter from "../presenter/event-presenter.js";
 import {filter} from "../utils/filter.js";
 import EventNewPresenter from "./event-new-presenter.js";
 
 
 export default class TripPresenter {
-  constructor(headerContainer, boardContainer, eventsModel, filterModel) {
+  constructor(headerContainer, boardContainer, eventsModel, filterModel, api) {
     this._headerContainerElement = headerContainer;
     this._boardContainerElement = boardContainer;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
+    this._api = api;
 
     this._eventPresenter = {};
     this._currentSortType = SortType.DEFAULT;
+
+    this._isLoading = true;
+    this._loadingComponent = new LoadingView();
 
     this._tripEventsElement = document.querySelector(`.trip-events`);
 
@@ -41,6 +46,11 @@ export default class TripPresenter {
 
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     // При каждой перерисовке устанавливается текущий тип фильтрации
     // чтобы при его изменении сбрасывать сортировку
     this._currentFilterType = this._filterModel.getFilter();
@@ -63,7 +73,7 @@ export default class TripPresenter {
     this._renderEventsList();
     this._renderEvents();
 
-    this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+    this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions());
   }
 
 
@@ -74,7 +84,7 @@ export default class TripPresenter {
       this._removeNoEventsNoticeIfExist();
       this._renderEventsList();
       this._renderNoEventsNotice();
-      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler);
+      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions());
     }
     this._eventNewPresenter.init();
   }
@@ -101,6 +111,11 @@ export default class TripPresenter {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this._eventsModel.updateEvent(updateType, update);
+
+        this._api.updateEvent(update).then((response) => {
+          this._eventsModel.updateEvent(updateType, response);
+        });
+
         break;
       case UserAction.ADD_EVENT:
         this._eventsModel.addEvent(updateType, update);
@@ -134,18 +149,18 @@ export default class TripPresenter {
   }
 
 
-  // get currentSortType() {
-  //   return this._currentSortType;
-  // }
-  //
-  //
-  // set currentSortType(value) {
-  //   this._currentSortType = value;
-  // }
-
-
   _getAllEvents() {
     return this._eventsModel.getEvents();
+  }
+
+
+  _getDestinations() {
+    return this._eventsModel.getDestinations();
+  }
+
+
+  _getOptions() {
+    return this._eventsModel.getOptions();
   }
 
 
@@ -179,7 +194,7 @@ export default class TripPresenter {
 
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventsListComponent, this._viewActionHandler, this._modeChangeHandler);
+    const eventPresenter = new EventPresenter(this._eventsListComponent, this._viewActionHandler, this._modeChangeHandler, this._getDestinations(), this._getOptions());
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -207,6 +222,11 @@ export default class TripPresenter {
     this._sortingComponent = new SortingView(this._currentSortType);
     this._sortingComponent.setSortTypeChangeHandler(this._sortTypeChangeHandler);
     render(this._boardContainerElement, this._sortingComponent, RenderPosition.BEFOREEND);
+  }
+
+
+  _renderLoading() {
+    render(this._boardContainerElement, this._loadingComponent, RenderPosition.AFTERBEGIN);
   }
 
 
@@ -259,6 +279,11 @@ export default class TripPresenter {
         // Тип заставляет перерисовываться всему путешествию, а не только списку событий, т.к. изменения в любой задаче могут повлиять
         // на информацию обо всем путешествии в шапке страницы
         this._clearTrip();
+        this._renderTrip();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderTrip();
         break;
     }

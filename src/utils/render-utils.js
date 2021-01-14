@@ -93,5 +93,4 @@ const remove = (component) => {
   component.removeElement();
 };
 
-
 export {getNumberWithZero, getDuration, renderTemplate, render, createElement, replace, remove};

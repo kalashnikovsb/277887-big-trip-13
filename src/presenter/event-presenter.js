@@ -11,10 +11,13 @@ const Mode = {
 
 
 export default class EventPresenter {
-  constructor(eventsListContainer, changeData, changeMode) {
+  constructor(eventsListContainer, changeData, changeMode, availableDestinations, availableOptions) {
     this._eventsListContainer = eventsListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+
+    this._availableDestinations = availableDestinations;
+    this._availableOptions = availableOptions;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
@@ -36,7 +39,7 @@ export default class EventPresenter {
     const prevEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventView(event);
-    this._eventEditComponent = new EventEditView(event);
+    this._eventEditComponent = new EventEditView(event, this._availableDestinations, this._availableOptions);
 
     // Передаю коллбеки в обработчики внутри view компонентов
     this._eventComponent.setEventOpenClickHandler(this._eventOpenClickHandler);

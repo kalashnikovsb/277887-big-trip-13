@@ -27,100 +27,33 @@ const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, e
 const menuComponent = new MenuView();
 render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
 
-// api.getEvents()
-//   .then((events) => {
-//     console.log(`Получил данные`);
-//     eventsModel.setEvents(UpdateType.INIT, events);
-//   })
-//   .catch(() => {
-//     console.log(`Не получил данные`);
-//     eventsModel.setEvents(UpdateType.INIT, []);
-//   });
-//
-// api.getDestinations()
-//   .then((destinations) => {
-//     eventsModel.setDestinations(destinations);
-//   });
-//
-// api.getOptions()
-//   .then((options) => {
-//     eventsModel.setOptions(options);
-//   });
-
 const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
 addNewEventButton.setAttribute(`disabled`, ``);
 
-// Promise.all([api.getEvents(), api.getDestinations(), api.getOptions()])
-//   .then((result) => {
-//     eventsModel.setOptions(result[2]);
-//     eventsModel.setDestinations(result[1]);
-//     eventsModel.setEvents(UpdateType.INIT, result[0]);
-//     addNewEventButton.removeAttribute(`disabled`);
-//   })
-//   .catch(() => {
-//     console.log(`Не получил данные!`);
-//     eventsModel.setEvents(UpdateType.INIT, []);
-//     addNewEventButton.removeAttribute(`disabled`);
-//   })
+api.getOptions().then((options) => {
+  eventsModel.setOptions(options);
 
-// Или
+  api.getDestinations().then((destinations) => {
+    addNewEventButton.removeAttribute(`disabled`);
+    eventsModel.setDestinations(destinations);
 
-// api.getOptions().then((options) => {
-//   console.log(`Опции загружены`);
-//   addNewEventButton.removeAttribute(`disabled`);
-//   eventsModel.setOptions(options);
-//
-//   api.getDestinations().then((destinations) => {
-//     console.log(`Пункты назначения загружены`);
-//     addNewEventButton.removeAttribute(`disabled`);
-//     eventsModel.setDestinations(destinations);
-//
-//     api.getEvents()
-//       .then((events) => {
-//         console.log(`Точки загружены`);
-//         addNewEventButton.removeAttribute(`disabled`);
-//         eventsModel.setEvents(UpdateType.INIT, events);
-//       });
-//       .catch(() => {
-//         console.log(`Точки не загружены`);
-//         eventsModel.setEvents(UpdateType.INIT, []);
-//       });
-//   });
-// });
-
-// Или
-
-api.getDestinations()
-.then((destinations) => {
-  console.log(`Пункты назначения загружены`);
-  eventsModel.setDestinations(destinations);
-})
-.catch((e) => {
-  console.log(`Пункты назначения не загружены`);
-})
-.then(api.getOptions())
-.then((options) => {
-    console.log(`Опции загружены`);
-    eventsModel.setOptions(options);
+    api.getEvents()
+      .then((events) => {
+        addNewEventButton.removeAttribute(`disabled`);
+        eventsModel.setEvents(UpdateType.INIT, events);
+      })
+      .catch(() => {
+        eventsModel.setEvents(UpdateType.INIT, []);
+        throw new Error(`Точки маршрута не загружены`);
+      });
   })
-.catch((e) => {
-  console.log(`Опции не загружены`);
+  .catch(() => {
+    throw new Error(`Пункты назначения не загружены`);
+  });
 })
-.then(api.getEvents())
-.then((events) => {
-  console.log(`Точки загружены`);
-  eventsModel.setEvents(UpdateType.INIT, events);
-})
-.catch((e) => {
-  console.log(`Точки не загружены`);
-  eventsModel.setEvents(UpdateType.INIT, []);
+.catch(() => {
+  throw new Error(`Опции не загружены`);
 });
-
-
-
-
-
-
 
 addNewEventButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();

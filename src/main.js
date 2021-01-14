@@ -50,13 +50,77 @@ render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
 const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
 addNewEventButton.setAttribute(`disabled`, ``);
 
-Promise.all([api.getEvents(), api.getDestinations(), api.getOptions()])
-  .then((result) => {
-    eventsModel.setOptions(result[2]);
-    eventsModel.setDestinations(result[1]);
-    eventsModel.setEvents(UpdateType.INIT, result[0]);
-    addNewEventButton.removeAttribute(`disabled`);
-  });
+// Promise.all([api.getEvents(), api.getDestinations(), api.getOptions()])
+//   .then((result) => {
+//     eventsModel.setOptions(result[2]);
+//     eventsModel.setDestinations(result[1]);
+//     eventsModel.setEvents(UpdateType.INIT, result[0]);
+//     addNewEventButton.removeAttribute(`disabled`);
+//   })
+//   .catch(() => {
+//     console.log(`Не получил данные!`);
+//     eventsModel.setEvents(UpdateType.INIT, []);
+//     addNewEventButton.removeAttribute(`disabled`);
+//   })
+
+// Или
+
+// api.getOptions().then((options) => {
+//   console.log(`Опции загружены`);
+//   addNewEventButton.removeAttribute(`disabled`);
+//   eventsModel.setOptions(options);
+//
+//   api.getDestinations().then((destinations) => {
+//     console.log(`Пункты назначения загружены`);
+//     addNewEventButton.removeAttribute(`disabled`);
+//     eventsModel.setDestinations(destinations);
+//
+//     api.getEvents()
+//       .then((events) => {
+//         console.log(`Точки загружены`);
+//         addNewEventButton.removeAttribute(`disabled`);
+//         eventsModel.setEvents(UpdateType.INIT, events);
+//       });
+//       .catch(() => {
+//         console.log(`Точки не загружены`);
+//         eventsModel.setEvents(UpdateType.INIT, []);
+//       });
+//   });
+// });
+
+// Или
+
+api.getDestinations()
+.then((destinations) => {
+  console.log(`Пункты назначения загружены`);
+  eventsModel.setDestinations(destinations);
+})
+.catch((e) => {
+  console.log(`Пункты назначения не загружены`);
+})
+.then(api.getOptions())
+.then((options) => {
+    console.log(`Опции загружены`);
+    eventsModel.setOptions(options);
+  })
+.catch((e) => {
+  console.log(`Опции не загружены`);
+})
+.then(api.getEvents())
+.then((events) => {
+  console.log(`Точки загружены`);
+  eventsModel.setEvents(UpdateType.INIT, events);
+})
+.catch((e) => {
+  console.log(`Точки не загружены`);
+  eventsModel.setEvents(UpdateType.INIT, []);
+});
+
+
+
+
+
+
 
 addNewEventButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();

@@ -84,9 +84,9 @@ export default class EventsModel extends Observer {
           description: event.destination.description,
           pictures: event.destination.pictures.slice(),
           options: getClientOptions(event.offers.slice()),
-          price: event.base_price,
-          timeStart: event.date_from !== null ? new Date(event.date_from) : new Date(),
-          timeEnd: event.date_to !== null ? new Date(event.date_to) : new Date(),
+          price: event[`base_price`],
+          timeStart: event.date_from !== null ? new Date(event[`date_from`]) : new Date(),
+          timeEnd: event.date_to !== null ? new Date(event[`date_to`]) : new Date(),
           isFavorite: event.is_favorite
         }
     );
@@ -106,16 +106,16 @@ export default class EventsModel extends Observer {
         {},
         event,
         {
-          base_price: Number(event.price),
-          date_from: event.timeStart.toISOString(),
-          date_to: event.timeEnd.toISOString(),
+          [`base_price`]: Number(event.price),
+          [`date_from`]: event.timeStart.toISOString(),
+          [`date_to`]: event.timeEnd.toISOString(),
           destination: {
             name: event.destination,
             description: event.description,
             pictures: event.pictures.slice()
           },
           id: event.id,
-          is_favorite: event.isFavorite,
+          [`is_favorite`]: event.isFavorite,
           type: event.type.toLowerCase(),
           offers: getServerOptions(event.options.slice())
         }

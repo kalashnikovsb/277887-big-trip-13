@@ -44,7 +44,6 @@ api.getOptions().then((options) => {
       })
       .catch(() => {
         eventsModel.setEvents(UpdateType.INIT, []);
-        throw new Error(`Точки маршрута не загружены`);
       });
   })
   .catch(() => {

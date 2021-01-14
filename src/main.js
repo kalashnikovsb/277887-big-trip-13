@@ -16,19 +16,10 @@ const tripEventsElement = document.querySelector(`.trip-events`);
 const menuHeaderElement = document.querySelector(`.trip-main__trip-controls .visually-hidden:nth-of-type(1)`);
 const filtersHeaderElement = document.querySelector(`.trip-main__trip-controls .visually-hidden:nth-of-type(2)`);
 
-const api = new Api(END_POINT, AUTHORIZATION);
-
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(tripHeaderElement, tripEventsElement, eventsModel, filterModel, api);
-const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, eventsModel);
-
-const menuComponent = new MenuView();
-render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
-
-const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
-addNewEventButton.setAttribute(`disabled`, ``);
+const api = new Api(END_POINT, AUTHORIZATION);
 
 api.getOptions().then((options) => {
   eventsModel.setOptions(options);
@@ -47,12 +38,21 @@ api.getOptions().then((options) => {
       });
   })
   .catch(() => {
-    throw new Error(`Пункты назначения не загружены`);
+    eventsModel.setOptions([]);
   });
 })
 .catch(() => {
-  throw new Error(`Опции не загружены`);
+  eventsModel.setDestinations([]);
 });
+
+const tripPresenter = new TripPresenter(tripHeaderElement, tripEventsElement, eventsModel, filterModel, api);
+const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, eventsModel);
+
+const menuComponent = new MenuView();
+render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
+
+const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+addNewEventButton.setAttribute(`disabled`, ``);
 
 addNewEventButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();

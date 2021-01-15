@@ -5,9 +5,11 @@ import {RenderPosition, UserAction, UpdateType} from "../const.js";
 
 
 export default class EventNewPresenter {
-  constructor(eventsListContainer, changeData, availableDestinations, availableOptions) {
+  constructor(eventsListContainer, changeData, availableDestinations, availableOptions, destroyBlankEvent) {
     this._eventsListContainer = eventsListContainer;
     this._changeData = changeData;
+
+    this._destroyBlankEvent = destroyBlankEvent;
 
     this._availableDestinations = availableDestinations;
     this._availableOptions = availableOptions;
@@ -34,9 +36,6 @@ export default class EventNewPresenter {
     render(this._eventsListContainer, this._eventEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
-
-    // Заблокировал кнопку на время создания ивента
-    document.querySelector(`.trip-main__event-add-btn`).setAttribute(`disabled`, ``);
   }
 
 
@@ -44,6 +43,9 @@ export default class EventNewPresenter {
     if (this._eventEditComponent === null) {
       return;
     }
+
+    this._destroyBlankEvent();
+
     remove(this._eventEditComponent);
     this._eventEditComponent = null;
     document.removeEventListener(`keydown`, this._escKeyDownHandler);

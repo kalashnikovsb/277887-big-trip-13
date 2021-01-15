@@ -77,7 +77,9 @@ export default class TripPresenter {
   }
 
 
-  createEvent() {
+  createEvent(destroyBlankEvent) {
+    this._destroyBlankEvent = destroyBlankEvent;
+
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
 
@@ -85,7 +87,8 @@ export default class TripPresenter {
       this.removeNoEventsNoticeIfExist();
       this._renderEventsList();
       this._renderNoEventsNotice();
-      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions());
+
+      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions(), this._destroyBlankEvent);
     }
 
     this._eventNewPresenter.init();

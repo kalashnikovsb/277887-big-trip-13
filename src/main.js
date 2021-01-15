@@ -47,7 +47,10 @@ const menuClickHandler = (menuItem) => {
 const addNewEventClickHandler = (evt) => {
   evt.preventDefault();
   tripPresenter.show();
-  tripPresenter.createEvent();
+
+  evt.target.disabled = true;
+  tripPresenter.createEvent(() => evt.target.disabled = false);
+
   currentMenuItem = MenuItem.TABLE;
   menuComponent.setMenuItem(MenuItem.TABLE);
 

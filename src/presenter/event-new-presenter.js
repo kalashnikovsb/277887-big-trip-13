@@ -24,7 +24,10 @@ export default class EventNewPresenter {
     if (this._eventEditComponent !== null) {
       return;
     }
-    this._eventEditComponent = new EventEditView(callback, this._availableDestinations, this._availableOptions);
+
+    const isAdding = true;
+
+    this._eventEditComponent = new EventEditView(callback, this._availableDestinations, this._availableOptions, isAdding);
     this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
     this._eventEditComponent.setDeleteClickHandler(this._deleteClickHandler);
 

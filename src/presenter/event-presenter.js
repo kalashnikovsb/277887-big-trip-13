@@ -38,8 +38,10 @@ export default class EventPresenter {
     const prevEventComponent = this._eventComponent;
     const prevEventEditComponent = this._eventEditComponent;
 
+    const isAdding = false;
+
     this._eventComponent = new EventView(event);
-    this._eventEditComponent = new EventEditView(event, this._availableDestinations, this._availableOptions);
+    this._eventEditComponent = new EventEditView(event, this._availableDestinations, this._availableOptions, isAdding);
 
     // Передаю коллбеки в обработчики внутри view компонентов
     this._eventComponent.setEventOpenClickHandler(this._eventOpenClickHandler);

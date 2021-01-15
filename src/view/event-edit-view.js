@@ -120,7 +120,18 @@ const isDestinationCorrect = (destination, availableDestinations) => {
 };
 
 
-const getEventEditTemplate = (data, availableDestinations, availableOptions, availableTypes) => {
+const getTriangleButton = (isAdding) => {
+  if (isAdding) {
+    return ``;
+  } else {
+    return `<button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>`;
+  }
+};
+
+
+const getEventEditTemplate = (data, availableDestinations, availableOptions, availableTypes, isAdding) => {
   const {type, timeStart, timeEnd, options} = data;
   let {price, destination} = data;
 
@@ -179,10 +190,8 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisable ? `disabled` : ``}>Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        <button class="event__reset-btn" type="reset">${isAdding ? `Cancel` : `Delete`}</button>
+        ${getTriangleButton(isAdding)}
       </header>
       <section class="event__details">
         ${optionsBlock}
@@ -194,11 +203,12 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
 
 
 export default class EventEditView extends SmartView {
-  constructor(event, availableDestinations, availableOptions) {
+  constructor(event, availableDestinations, availableOptions, isAdding) {
     super();
     this._destinations = availableDestinations.slice();
     this._options = availableOptions.slice();
     this._types = this.getTypes(this._options);
+    this._isAdding = isAdding;
 
     if (!!event === false) {
       event = {
@@ -244,7 +254,7 @@ export default class EventEditView extends SmartView {
 
 
   getTemplate() {
-    return getEventEditTemplate(this._data, this._destinations, this._options, this._types);
+    return getEventEditTemplate(this._data, this._destinations, this._options, this._types, this._isAdding);
   }
 
 

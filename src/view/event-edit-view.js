@@ -191,7 +191,9 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisable ? `disabled` : ``}>Save</button>
         <button class="event__reset-btn" type="reset">${isAdding ? `Cancel` : `Delete`}</button>
-        ${getTriangleButton(isAdding)}
+        <button class="event__rollup-btn ${isAdding ? `visually-hidden` : ``}" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>
       </header>
       <section class="event__details">
         ${optionsBlock}

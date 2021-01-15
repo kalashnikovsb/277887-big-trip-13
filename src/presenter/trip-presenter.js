@@ -80,12 +80,14 @@ export default class TripPresenter {
   createEvent() {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+
     if (this._noEventsNoticeComponent) {
       this._removeNoEventsNoticeIfExist();
       this._renderEventsList();
       this._renderNoEventsNotice();
       this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions());
     }
+
     this._eventNewPresenter.init();
   }
 
@@ -103,6 +105,11 @@ export default class TripPresenter {
       this._eventsListComponent = null;
     }
     this._eventsListComponent = new EventsListView();
+
+    // if (this._noEventsNoticeComponent !==) {
+    //
+    // }
+
     render(this._boardContainerElement, this._eventsListComponent, RenderPosition.BEFOREEND);
   }
 
@@ -180,12 +187,16 @@ export default class TripPresenter {
       this._noEventsNoticeComponent = null;
     }
 
-    if (keepTripInformation === false) {
+    if (keepTripInformation === false && !!this._tripInformationComponent) {
       remove(this._tripInformationComponent);
     }
 
     remove(this._sortingComponent);
-    remove(this._eventsListComponent);
+
+    if (this._eventsListComponent) {
+      remove(this._eventsListComponent);
+    }
+
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;

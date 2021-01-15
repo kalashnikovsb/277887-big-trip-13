@@ -79,13 +79,8 @@ api.getOptions().then((options) => {
     // Опции и пункты назначения загрузились, разблокирую фильтры
     filterPresenter.filtersEnable();
 
-
-
+    // Удаляю сообщение при переходе на статистику
     menuComponent.setMenuClickHandler(menuClickHandler);
-
-
-
-
 
     // Кнопка добавления ивента разблокируется при успешной загрузке опций и пунктов назначения
     addNewEventButton.removeAttribute(`disabled`);

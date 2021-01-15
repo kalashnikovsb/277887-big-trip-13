@@ -92,6 +92,7 @@ export default class TripPresenter {
   }
 
 
+  // Метод публичный чтобы использовать в main.js при переходе на статистику в меню
   removeNoEventsNoticeIfExist() {
     if (this._noEventsNoticeComponent) {
       remove(this._noEventsNoticeComponent);
@@ -105,10 +106,6 @@ export default class TripPresenter {
       this._eventsListComponent = null;
     }
     this._eventsListComponent = new EventsListView();
-
-    // if (this._noEventsNoticeComponent !==) {
-    //
-    // }
 
     render(this._boardContainerElement, this._eventsListComponent, RenderPosition.BEFOREEND);
   }

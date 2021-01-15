@@ -68,7 +68,7 @@ export default class TripPresenter {
       return;
     }
 
-    this._removeNoEventsNoticeIfExist();
+    this.removeNoEventsNoticeIfExist();
     this._renderSorting();
     this._renderEventsList();
     this._renderEvents();
@@ -82,7 +82,7 @@ export default class TripPresenter {
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
 
     if (this._noEventsNoticeComponent) {
-      this._removeNoEventsNoticeIfExist();
+      this.removeNoEventsNoticeIfExist();
       this._renderEventsList();
       this._renderNoEventsNotice();
       this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions());
@@ -92,7 +92,7 @@ export default class TripPresenter {
   }
 
 
-  _removeNoEventsNoticeIfExist() {
+  removeNoEventsNoticeIfExist() {
     if (this._noEventsNoticeComponent) {
       remove(this._noEventsNoticeComponent);
       this._noEventsNoticeComponent = null;

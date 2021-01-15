@@ -22,6 +22,8 @@ const menuClickHandler = (menuItem) => {
   }
   currentMenuItem = menuItem;
 
+  tripPresenter.removeNoEventsNoticeIfExist();
+
   switch (menuItem) {
     case MenuItem.TABLE:
       if (statisticComponent !== null) {

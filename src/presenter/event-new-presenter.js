@@ -34,6 +34,9 @@ export default class EventNewPresenter {
     render(this._eventsListContainer, this._eventEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+
+    // Заблокировал кнопку на время создания ивента
+    document.querySelector(`.trip-main__event-add-btn`).setAttribute(`disabled`, ``);
   }
 
 

@@ -41,7 +41,7 @@ const getEventTypesList = (currentType, availableTypes) => {
 
 
 const getDestinationsList = (availableDestinations) => {
-  return `<datalist id="destination-list-1">
+  return `<datalist id="destination-list-1" required>
   ${availableDestinations.map((destination) => {
     return `<option value="${destination.name}"></option>`;
   }).join(``)}
@@ -120,17 +120,6 @@ const isDestinationCorrect = (destination, availableDestinations) => {
 };
 
 
-const getTriangleButton = (isAdding) => {
-  if (isAdding) {
-    return ``;
-  } else {
-    return `<button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>`;
-  }
-};
-
-
 const getEventEditTemplate = (data, availableDestinations, availableOptions, availableTypes, isAdding) => {
   const {type, timeStart, timeEnd, options} = data;
   let {price, destination} = data;
@@ -147,7 +136,7 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
     price = ``;
   }
 
-  const isSubmitDisable = !price || !destination;
+  const isSubmitDisable = !destination;
 
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
   const optionsBlock = getOptionsList(type, options, availableOptions);
@@ -186,7 +175,7 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-1" name="event-price" type="number" min="1" required value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisable ? `disabled` : ``}>Save</button>
@@ -214,7 +203,7 @@ export default class EventEditView extends SmartView {
 
     if (!!event === false) {
       event = {
-        type: this._types[0], // Flight по умолчанию
+        type: this._types[0],
         destination: ``,
         description: ``,
         options: [],

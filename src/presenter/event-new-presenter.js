@@ -5,11 +5,9 @@ import {RenderPosition, UserAction, UpdateType} from "../const.js";
 
 
 export default class EventNewPresenter {
-  constructor(eventsListContainer, changeData, availableDestinations, availableOptions, destroyBlankEvent) {
+  constructor(eventsListContainer, changeData, availableDestinations, availableOptions) {
     this._eventsListContainer = eventsListContainer;
     this._changeData = changeData;
-
-    this._destroyBlankEvent = destroyBlankEvent;
 
     this._availableDestinations = availableDestinations;
     this._availableOptions = availableOptions;
@@ -22,14 +20,16 @@ export default class EventNewPresenter {
   }
 
 
-  init() {
+  init(destroyBlankEvent) {
     if (this._eventEditComponent !== null) {
       return;
     }
 
+    this._destroyBlankEvent = destroyBlankEvent;
+
     const isAdding = true;
 
-    this._eventEditComponent = new EventEditView(false, this._availableDestinations, this._availableOptions, isAdding);
+    this._eventEditComponent = new EventEditView(null, this._availableDestinations, this._availableOptions, isAdding);
     this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
     this._eventEditComponent.setDeleteClickHandler(this._deleteClickHandler);
 

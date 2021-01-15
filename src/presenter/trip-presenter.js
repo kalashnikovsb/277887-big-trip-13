@@ -87,10 +87,10 @@ export default class TripPresenter {
       this.removeNoEventsNoticeIfExist();
       this._renderEventsList();
       this._renderNoEventsNotice();
-      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions(), this._destroyBlankEvent);
+      this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions());
     }
 
-    this._eventNewPresenter.init();
+    this._eventNewPresenter.init(this._destroyBlankEvent);
   }
 
 

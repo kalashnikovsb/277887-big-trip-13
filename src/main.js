@@ -61,7 +61,6 @@ addNewEventButton.addEventListener(`click`, addNewEventClickHandler);
 
 const menuComponent = new MenuView();
 render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
-menuComponent.setMenuClickHandler(menuClickHandler);
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
@@ -77,6 +76,16 @@ api.getOptions().then((options) => {
   api.getDestinations().then((destinations) => {
     // Опции и пункты назначения загрузились, разблокирую фильтры
     filterPresenter.filtersEnable();
+
+
+
+    menuComponent.setMenuClickHandler(menuClickHandler);
+
+
+
+
+
+    // Кнопка добавления ивента разблокируется при успешной загрузке опций и пунктов назначения
     addNewEventButton.removeAttribute(`disabled`);
     eventsModel.setDestinations(destinations);
 

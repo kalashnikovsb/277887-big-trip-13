@@ -36,6 +36,7 @@ const menuClickHandler = (menuItem) => {
       if (statisticComponent !== null) {
         statisticComponent.hide();
       }
+
       statisticComponent = new StatisticView(tripEventsElement, eventsModel.getEvents(), eventsModel.getOptions());
       tripPresenter.hide();
       statisticComponent.show();

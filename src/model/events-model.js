@@ -103,10 +103,6 @@ export default class EventsModel extends Observer {
 
   static adaptEventsToServer(event) {
 
-    console.log(this.getEvents());
-    console.log(this.getDestinations());
-    console.log(this.getOptions());
-
     const adaptedEvent = Object.assign(
         {},
         event,
@@ -133,8 +129,6 @@ export default class EventsModel extends Observer {
     delete adaptedEvent.description;
     delete adaptedEvent.pictures;
 
-    console.log(adaptedEvent);
-
     return adaptedEvent;
   }
 
@@ -147,7 +141,7 @@ export default class EventsModel extends Observer {
     for (let serverPicture of destination.pictures) {
       let picture = {};
       picture.src = serverPicture.src;
-      picture.alt = serverPicture.description;
+      picture.description = serverPicture.description;
       result.pictures.push(picture);
     }
     return result;

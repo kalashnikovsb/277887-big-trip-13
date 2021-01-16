@@ -50,7 +50,7 @@ const getDestinationsList = (availableDestinations) => {
 };
 
 
-const getOptionsList = (type, options, availableOptions) => {
+const getOptionsList = (type, options, availableOptions, isDisabled) => {
   if (Boolean(type) === false) {
     return ``;
   }
@@ -65,7 +65,7 @@ const getOptionsList = (type, options, availableOptions) => {
       return (option.name === constOption.name) ? true : false;
     });
     return `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1" type="checkbox" name="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}" data-name="${constOption.name}" ${isChecked ? `checked` : ``}>
+      <input class="event__offer-checkbox  visually-hidden" ${isDisabled ? `disabled` : ``} id="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1" type="checkbox" name="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}" data-name="${constOption.name}" ${isChecked ? `checked` : ``}>
       <label class="event__offer-label" for="event-offer-${constOption.name.toLowerCase().split(` `).join(`-`)}-1">
         <span class="event__offer-title">${constOption.name}</span>
         &plus;&euro;&nbsp;
@@ -120,7 +120,39 @@ const isDestinationCorrect = (destination, availableDestinations) => {
 };
 
 
-const getEventEditTemplate = (data, availableDestinations, availableOptions, availableTypes, isAdding) => {
+const getCloseButton = (isAdding, isDeleting, isDisabled) => {
+  let result = `Delete`;
+  if (isAdding) {
+    result = `Cancel`;
+  }
+  if (isDeleting) {
+    result = `Deleting`;
+  }
+  return `<button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>${result}</button>`;
+};
+
+
+const getSubmitButton = (isFormSubmitDisable, isSaving, isDisabled) => {
+  let result = `Save`;
+  if (isSaving) {
+    result = `Saving`;
+  }
+  return `<button class="event__save-btn  btn  btn--blue" type="submit" ${isFormSubmitDisable || isDisabled ? `disabled` : ``}>${result}</button>`;
+};
+
+
+const getTriangleButton = (isAdding, isDisabled) => {
+  if (isAdding) {
+    return ``;
+  } else {
+    return `<button class="event__rollup-btn" type="button" ${isDisabled ? `disabled` : ``}>
+    <span class="visually-hidden">Open event</span>
+  </button>`;
+  }
+};
+
+
+const getEventEditTemplate = (data, availableDestinations, availableOptions, availableTypes, isAdding, isDisabled, isSaving, isDeleting) => {
   const {type, timeStart, timeEnd, options} = data;
   let {price, destination} = data;
 
@@ -136,11 +168,11 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
     price = ``;
   }
 
-  const isSubmitDisable = !destination;
+  const isFormSubmitDisable = !destination;
 
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
-  const optionsBlock = getOptionsList(type, options, availableOptions);
-  const descriptionBlock = getDescription(destination, availableDestinations);
+  const getOptionsBlock = getOptionsList(type, options, availableOptions, isDisabled);
+  const getDescriptionBlock = getDescription(destination, availableDestinations);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -150,7 +182,7 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${getType(type).toLowerCase()}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? `disabled` : ``}>
           ${getEventTypesList(type, availableTypes)}
         </div>
 
@@ -158,16 +190,16 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
           <label class="event__label  event__type-output" for="event-destination-1">
             ${getType(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(getDestination(destination))}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" ${isDisabled ? `disabled` : ``} name="event-destination" value="${he.encode(getDestination(destination))}" list="destination-list-1">
           ${getDestinationsList(availableDestinations)}
         </div>
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dayjs(timeStart).format(`DD/MM/YY HH:mm`)}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" ${isDisabled ? `disabled` : ``} name="event-start-time" value="${dayjs(timeStart).format(`DD/MM/YY HH:mm`)}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dayjs(timeEnd).format(`DD/MM/YY HH:mm`)}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" ${isDisabled ? `disabled` : ``} name="event-end-time" value="${dayjs(timeEnd).format(`DD/MM/YY HH:mm`)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -175,18 +207,15 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" name="event-price" type="number" min="1" required value="${price}">
+          <input class="event__input event__input--price" ${isDisabled ? `disabled` : ``} id="event-price-1" name="event-price" type="number" min="1" required value="${price}">
         </div>
-
-        <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisable ? `disabled` : ``}>Save</button>
-        <button class="event__reset-btn" type="reset">${isAdding ? `Cancel` : `Delete`}</button>
-        <button class="event__rollup-btn ${isAdding ? `visually-hidden` : ``}" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        ${getSubmitButton(isFormSubmitDisable, isSaving, isDisabled)}
+        ${getCloseButton(isAdding, isDeleting, isDisabled)}
+        ${getTriangleButton(isAdding, isDisabled)}
       </header>
       <section class="event__details">
-        ${optionsBlock}
-        ${descriptionBlock}
+        ${getOptionsBlock}
+        ${getDescriptionBlock}
       </section>
     </form>
   </li>`;
@@ -265,7 +294,11 @@ export default class EventEditView extends SmartView {
 
   setEventEditCloseClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._eventEditCloseClickHandler);
+    const triangleButton = this.getElement().querySelector(`.event__rollup-btn`);
+    if (triangleButton) {
+      triangleButton.addEventListener(`click`, this._eventEditCloseClickHandler);
+    }
+    // this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._eventEditCloseClickHandler);
   }
 
 
@@ -320,8 +353,11 @@ export default class EventEditView extends SmartView {
 
   _destinationChangeHandler(evt) {
     evt.preventDefault();
+    let choosedDestination = this._destinations.find((destination) => destination.name === evt.target.value) || {};
     this.updateData({
-      destination: evt.target.value
+      destination: evt.target.value,
+      description: choosedDestination.description,
+      pictures: choosedDestination.pictures
     });
   }
 

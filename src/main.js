@@ -63,7 +63,7 @@ const addNewEventClickHandler = (evt) => {
 };
 
 const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
-addNewEventButton.setAttribute(`disabled`, ``);
+addNewEventButton.disabled = true;
 addNewEventButton.addEventListener(`click`, addNewEventClickHandler);
 
 const menuComponent = new MenuView();
@@ -88,7 +88,7 @@ api.getOptions().then((options) => {
     menuComponent.setMenuClickHandler(menuClickHandler);
 
     // Кнопка добавления ивента разблокируется при успешной загрузке опций и пунктов назначения
-    addNewEventButton.removeAttribute(`disabled`);
+    addNewEventButton.disabled = false;
     eventsModel.setDestinations(destinations);
 
     api.getEvents()

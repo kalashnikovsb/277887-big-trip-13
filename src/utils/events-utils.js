@@ -53,6 +53,4 @@ const isPastEvent = (time) => {
   return (targetTime < currentTime) ? true : false;
 };
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
-
-export {sortTimeStartUp, sortTimeEndUp, sortPriceDown, sortTimeDown, addOrDeleteOption, isFutureEvent, isPastEvent, generateId};
+export {sortTimeStartUp, sortTimeEndUp, sortPriceDown, sortTimeDown, addOrDeleteOption, isFutureEvent, isPastEvent};

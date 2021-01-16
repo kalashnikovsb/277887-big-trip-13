@@ -211,6 +211,7 @@ export default class EventEditView extends SmartView {
         timeStart: new Date(),
         timeEnd: new Date(),
         isFavorite: false,
+        pictures: []
       };
     }
 

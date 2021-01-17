@@ -74,11 +74,11 @@ export default class FilterPresenter {
   }
 
 
-  filtersDisable() {
-    this._filterComponent.filtersDisable();
+  disableFilters() {
+    this._filterComponent.disableFilters();
   }
 
-  filtersEnable() {
-    this._filterComponent.filtersEnable();
+  enableFilters() {
+    this._filterComponent.enableFilters();
   }
 }

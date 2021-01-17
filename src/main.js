@@ -30,7 +30,7 @@ const menuClickHandler = (menuItem) => {
         statisticComponent.hide();
       }
       tripPresenter.show();
-      filterPresenter.filtersEnable();
+      filterPresenter.enableFilters();
       break;
     case MenuItem.STATS:
       if (statisticComponent !== null) {
@@ -40,7 +40,7 @@ const menuClickHandler = (menuItem) => {
       statisticComponent = new StatisticView(tripEventsElement, eventsModel.getEvents(), eventsModel.getOptions());
       tripPresenter.hide();
       statisticComponent.show();
-      filterPresenter.filtersDisable();
+      filterPresenter.disableFilters();
       break;
   }
 };
@@ -57,7 +57,7 @@ const addNewEventClickHandler = (evt) => {
   currentMenuItem = MenuItem.TABLE;
   menuComponent.setMenuItem(MenuItem.TABLE);
 
-  filterPresenter.filtersEnable();
+  filterPresenter.enableFilters();
   if (statisticComponent !== null) {
     statisticComponent.hide();
   }
@@ -83,7 +83,7 @@ api.getOptions().then((options) => {
 
   api.getDestinations().then((destinations) => {
     // Опции и пункты назначения загрузились, разблокирую фильтры
-    filterPresenter.filtersEnable();
+    filterPresenter.enableFilters();
 
     // Удаляю сообщение при переходе на статистику
     menuComponent.setMenuClickHandler(menuClickHandler);
@@ -116,4 +116,4 @@ filterPresenter.init();
 tripPresenter.init();
 
 // Блокирую фильтры пока не загрузятся опции и пункты назначения
-filterPresenter.filtersDisable();
+filterPresenter.disableFilters();

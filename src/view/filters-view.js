@@ -50,13 +50,13 @@ export default class FiltersView extends AbstractView {
   }
 
 
-  filtersDisable() {
+  disableFilters() {
     let filters = this.getElement().querySelectorAll(`.trip-filters__filter-input`);
     filters.forEach((filter) => filter.setAttribute(`disabled`, ``));
   }
 
 
-  filtersEnable() {
+  enableFilters() {
     let filters = this.getElement().querySelectorAll(`.trip-filters__filter-input`);
     filters.forEach((filter) => filter.removeAttribute(`disabled`));
   }

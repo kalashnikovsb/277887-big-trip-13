@@ -32,6 +32,7 @@ export default class EventsModel extends Observer {
     this._options = options.slice();
   }
 
+
   getOptions() {
     return this._options;
   }
@@ -78,8 +79,7 @@ export default class EventsModel extends Observer {
         {},
         event,
         {
-          id: event.id,
-          type: event.type,
+          type: event.type.slice(0, 1).toUpperCase() + event.type.slice(1),
           destination: event.destination.name,
           description: event.destination.description,
           pictures: event.destination.pictures.slice(),
@@ -102,6 +102,7 @@ export default class EventsModel extends Observer {
 
 
   static adaptEventsToServer(event) {
+
     const adaptedEvent = Object.assign(
         {},
         event,
@@ -114,7 +115,6 @@ export default class EventsModel extends Observer {
             description: event.description,
             pictures: event.pictures.slice()
           },
-          id: event.id,
           [`is_favorite`]: event.isFavorite,
           type: event.type.toLowerCase(),
           offers: getServerOptions(event.options.slice())
@@ -132,25 +132,6 @@ export default class EventsModel extends Observer {
     return adaptedEvent;
   }
 
-  setDestinations(destinations) {
-    this._destinations = destinations.slice();
-  }
-
-
-  getDestinations() {
-    return this._destinations;
-  }
-
-
-  setOptions(options) {
-    this._options = options.slice();
-  }
-
-
-  getOptions() {
-    return this._options;
-  }
-
 
   static adaptDestinationsToClient(destination) {
     let result = {};
@@ -160,7 +141,7 @@ export default class EventsModel extends Observer {
     for (let serverPicture of destination.pictures) {
       let picture = {};
       picture.src = serverPicture.src;
-      picture.alt = serverPicture.description;
+      picture.description = serverPicture.description;
       result.pictures.push(picture);
     }
     return result;

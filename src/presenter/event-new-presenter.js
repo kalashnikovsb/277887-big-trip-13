@@ -1,5 +1,4 @@
 import EventEditView from "../view/event-edit-view.js";
-import {generateId} from "../utils/events-utils.js";
 import {remove, render} from "../utils/render-utils.js";
 import {RenderPosition, UserAction, UpdateType} from "../const.js";
 
@@ -20,11 +19,16 @@ export default class EventNewPresenter {
   }
 
 
-  init(callback) {
+  init(destroyBlankEvent) {
     if (this._eventEditComponent !== null) {
       return;
     }
-    this._eventEditComponent = new EventEditView(callback, this._availableDestinations, this._availableOptions);
+
+    this._destroyBlankEvent = destroyBlankEvent;
+
+    const isAdding = true;
+
+    this._eventEditComponent = new EventEditView(null, this._availableDestinations, this._availableOptions, isAdding);
     this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
     this._eventEditComponent.setDeleteClickHandler(this._deleteClickHandler);
 
@@ -38,6 +42,9 @@ export default class EventNewPresenter {
     if (this._eventEditComponent === null) {
       return;
     }
+
+    this._destroyBlankEvent();
+
     remove(this._eventEditComponent);
     this._eventEditComponent = null;
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
@@ -48,9 +55,8 @@ export default class EventNewPresenter {
     this._changeData(
         UserAction.ADD_EVENT,
         UpdateType.MAJOR,
-        Object.assign({id: generateId()}, event)
+        event
     );
-    this.destroy();
   }
 
 
@@ -64,5 +70,25 @@ export default class EventNewPresenter {
       evt.preventDefault();
       this.destroy();
     }
+  }
+
+
+  setSaving() {
+    this._eventEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+
+  setAborting() {
+    const resetFormState = () => {
+      this._eventEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this._eventEditComponent.shake(resetFormState);
   }
 }

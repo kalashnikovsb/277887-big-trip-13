@@ -22,6 +22,8 @@ const menuClickHandler = (menuItem) => {
   }
   currentMenuItem = menuItem;
 
+  tripPresenter.removeNoEventsNoticeIfExist();
+
   switch (menuItem) {
     case MenuItem.TABLE:
       if (statisticComponent !== null) {
@@ -34,6 +36,7 @@ const menuClickHandler = (menuItem) => {
       if (statisticComponent !== null) {
         statisticComponent.hide();
       }
+
       statisticComponent = new StatisticView(tripEventsElement, eventsModel.getEvents(), eventsModel.getOptions());
       tripPresenter.hide();
       statisticComponent.show();
@@ -45,7 +48,12 @@ const menuClickHandler = (menuItem) => {
 const addNewEventClickHandler = (evt) => {
   evt.preventDefault();
   tripPresenter.show();
-  tripPresenter.createEvent();
+
+  evt.target.disabled = true;
+  tripPresenter.createEvent(() => {
+    evt.target.disabled = false;
+  });
+
   currentMenuItem = MenuItem.TABLE;
   menuComponent.setMenuItem(MenuItem.TABLE);
 
@@ -55,12 +63,18 @@ const addNewEventClickHandler = (evt) => {
   }
 };
 
+const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+addNewEventButton.disabled = true;
+addNewEventButton.addEventListener(`click`, addNewEventClickHandler);
+
 const menuComponent = new MenuView();
 render(menuHeaderElement, menuComponent, RenderPosition.AFTEREND);
-menuComponent.setMenuClickHandler(menuClickHandler);
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
+
+let currentMenuItem = MenuItem.TABLE;
+let statisticComponent = null;
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
@@ -68,12 +82,19 @@ api.getOptions().then((options) => {
   eventsModel.setOptions(options);
 
   api.getDestinations().then((destinations) => {
-    addNewEventButton.removeAttribute(`disabled`);
+    // Опции и пункты назначения загрузились, разблокирую фильтры
+    filterPresenter.filtersEnable();
+
+    // Удаляю сообщение при переходе на статистику
+    menuComponent.setMenuClickHandler(menuClickHandler);
+
+    // Кнопка добавления ивента разблокируется при успешной загрузке опций и пунктов назначения
+    addNewEventButton.disabled = false;
     eventsModel.setDestinations(destinations);
 
     api.getEvents()
       .then((events) => {
-        addNewEventButton.removeAttribute(`disabled`);
+
         eventsModel.setEvents(UpdateType.INIT, events);
       })
       .catch(() => {
@@ -88,16 +109,11 @@ api.getOptions().then((options) => {
   eventsModel.setDestinations([]);
 });
 
-let currentMenuItem = MenuItem.TABLE;
-let statisticComponent = null;
-
-const addNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
-addNewEventButton.addEventListener(`click`, addNewEventClickHandler);
-// Блокирую кнопку на время загрузки данных
-addNewEventButton.setAttribute(`disabled`, ``);
-
 const tripPresenter = new TripPresenter(tripHeaderElement, tripEventsElement, eventsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(filtersHeaderElement, filterModel, eventsModel);
 
 filterPresenter.init();
 tripPresenter.init();
+
+// Блокирую фильтры пока не загрузятся опции и пункты назначения
+filterPresenter.filtersDisable();

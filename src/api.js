@@ -3,7 +3,9 @@ import EventsModel from "./model/events-model.js";
 
 const Method = {
   GET: `GET`,
-  PUT: `PUT`
+  PUT: `PUT`,
+  POST: `POST`,
+  DELETE: `DELETE`
 };
 
 const SuccessHTTPSStatusRange = {
@@ -35,6 +37,26 @@ export default class Api {
     })
     .then(Api.toJSON)
     .then(EventsModel.adaptEventsToClient);
+  }
+
+
+  addEvent(event) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(EventsModel.adaptEventsToServer(event)),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+    .then(Api.toJSON)
+    .then(EventsModel.adaptEventsToClient);
+  }
+
+
+  deleteEvent(event) {
+    return this._load({
+      url: `points/${event.id}`,
+      method: Method.DELETE
+    });
   }
 
 

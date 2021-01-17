@@ -6,7 +6,7 @@ import SortingView from "../view/sorting-view.js";
 import EventsListView from "../view/events-list-view.js";
 import NoEventsNoticeView from "../view/no-events-notice-view.js";
 import LoadingView from "../view/loading-view.js";
-import EventPresenter from "../presenter/event-presenter.js";
+import EventPresenter, {State as EventPresenterViewState} from "../presenter/event-presenter.js";
 import {filter} from "../utils/filter.js";
 import EventNewPresenter from "./event-new-presenter.js";
 
@@ -68,7 +68,7 @@ export default class TripPresenter {
       return;
     }
 
-    this._removeNoEventsNoticeIfExist();
+    this.removeNoEventsNoticeIfExist();
     this._renderSorting();
     this._renderEventsList();
     this._renderEvents();
@@ -77,20 +77,25 @@ export default class TripPresenter {
   }
 
 
-  createEvent() {
+  createEvent(destroyBlankEvent) {
+    this._destroyBlankEvent = destroyBlankEvent;
+
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+
     if (this._noEventsNoticeComponent) {
-      this._removeNoEventsNoticeIfExist();
+      this.removeNoEventsNoticeIfExist();
       this._renderEventsList();
       this._renderNoEventsNotice();
       this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions());
     }
-    this._eventNewPresenter.init();
+
+    this._eventNewPresenter.init(this._destroyBlankEvent);
   }
 
 
-  _removeNoEventsNoticeIfExist() {
+  // Метод публичный чтобы использовать в main.js при переходе на статистику в меню
+  removeNoEventsNoticeIfExist() {
     if (this._noEventsNoticeComponent) {
       remove(this._noEventsNoticeComponent);
       this._noEventsNoticeComponent = null;
@@ -103,6 +108,7 @@ export default class TripPresenter {
       this._eventsListComponent = null;
     }
     this._eventsListComponent = new EventsListView();
+
     render(this._boardContainerElement, this._eventsListComponent, RenderPosition.BEFOREEND);
   }
 
@@ -110,18 +116,34 @@ export default class TripPresenter {
   _viewActionHandler(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this._eventsModel.updateEvent(updateType, update);
-
-        this._api.updateEvent(update).then((response) => {
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
+        this._api.updateEvent(update)
+        .then((response) => {
           this._eventsModel.updateEvent(updateType, response);
+        })
+        .catch(() => {
+          this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
         });
-
         break;
       case UserAction.ADD_EVENT:
-        this._eventsModel.addEvent(updateType, update);
+        this._eventNewPresenter.setSaving();
+        this._api.addEvent(update)
+        .then((response) => {
+          this._eventsModel.addEvent(updateType, response);
+        })
+        .catch(() => {
+          this._eventNewPresenter.setAborting();
+        });
         break;
       case UserAction.DELETE_EVENT:
-        this._eventsModel.deleteEvent(updateType, update);
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.DELETING);
+        this._api.deleteEvent(update)
+        .then(() => {
+          this._eventsModel.deleteEvent(updateType, update);
+        })
+        .catch(() => {
+          this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
+        });
         break;
     }
   }
@@ -180,12 +202,16 @@ export default class TripPresenter {
       this._noEventsNoticeComponent = null;
     }
 
-    if (keepTripInformation === false) {
+    if (keepTripInformation === false && !!this._tripInformationComponent) {
       remove(this._tripInformationComponent);
     }
 
     remove(this._sortingComponent);
-    remove(this._eventsListComponent);
+
+    if (this._eventsListComponent) {
+      remove(this._eventsListComponent);
+    }
+
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;

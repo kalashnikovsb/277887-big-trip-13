@@ -10,6 +10,13 @@ const Mode = {
 };
 
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
+
 export default class EventPresenter {
   constructor(eventsListContainer, changeData, changeMode, availableDestinations, availableOptions) {
     this._eventsListContainer = eventsListContainer;
@@ -63,11 +70,42 @@ export default class EventPresenter {
 
     // Отрисовка нового события вместо старого, проверка нужна чтобы не заменять то чего нет
     if (this._mode === Mode.EDITING) {
-      replace(this._eventEditComponent, prevEventEditComponent);
+      replace(this._eventComponent, prevEventEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevEventComponent);
     remove(prevEventEditComponent);
+  }
+
+
+  setViewState(state) {
+
+    const resetFormState = () => {
+      this._eventEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._eventEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._eventEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ABORTING:
+        this._eventComponent.shake(resetFormState);
+        this._eventEditComponent.shake(resetFormState);
+    }
   }
 
 
@@ -132,7 +170,6 @@ export default class EventPresenter {
         UpdateType.MAJOR,
         event
     );
-    this._replaceEditToEvent();
   }
 
 

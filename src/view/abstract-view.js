@@ -1,5 +1,7 @@
 import {createElement} from "../utils/render-utils.js";
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 
 export default class AbstractView {
   constructor() {
@@ -33,5 +35,14 @@ export default class AbstractView {
 
   hide() {
     throw new Error(`Abstract method not implemented: hide`);
+  }
+
+
+  shake(callback) {
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+      callback();
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 }

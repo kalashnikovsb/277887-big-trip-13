@@ -57,7 +57,6 @@ export default class EventNewPresenter {
         UpdateType.MAJOR,
         event
     );
-    this.destroy();
   }
 
 
@@ -71,5 +70,25 @@ export default class EventNewPresenter {
       evt.preventDefault();
       this.destroy();
     }
+  }
+
+
+  setSaving() {
+    this._eventEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+
+  setAborting() {
+    const resetFormState = () => {
+      this._eventEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this._eventEditComponent.shake(resetFormState);
   }
 }

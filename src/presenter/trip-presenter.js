@@ -6,7 +6,7 @@ import SortingView from "../view/sorting-view.js";
 import EventsListView from "../view/events-list-view.js";
 import NoEventsNoticeView from "../view/no-events-notice-view.js";
 import LoadingView from "../view/loading-view.js";
-import EventPresenter from "../presenter/event-presenter.js";
+import EventPresenter, {State as EventPresenterViewState} from "../presenter/event-presenter.js";
 import {filter} from "../utils/filter.js";
 import EventNewPresenter from "./event-new-presenter.js";
 
@@ -116,21 +116,33 @@ export default class TripPresenter {
   _viewActionHandler(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this._eventsModel.updateEvent(updateType, update);
-
-        this._api.updateEvent(update).then((response) => {
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
+        this._api.updateEvent(update)
+        .then((response) => {
           this._eventsModel.updateEvent(updateType, response);
+        })
+        .catch(() => {
+          this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
         });
-
         break;
       case UserAction.ADD_EVENT:
-        this._api.addEvent(update).then((response) => {
+        this._eventNewPresenter.setSaving();
+        this._api.addEvent(update)
+        .then((response) => {
           this._eventsModel.addEvent(updateType, response);
+        })
+        .catch(() => {
+          this._eventNewPresenter.setAborting();
         });
         break;
       case UserAction.DELETE_EVENT:
-        this._api.deleteEvent(update).then(() => {
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.DELETING);
+        this._api.deleteEvent(update)
+        .then(() => {
           this._eventsModel.deleteEvent(updateType, update);
+        })
+        .catch(() => {
+          this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
         });
         break;
     }

@@ -152,8 +152,8 @@ const getTriangleButton = (isAdding, isDisabled) => {
 };
 
 
-const getEventEditTemplate = (data, availableDestinations, availableOptions, availableTypes, isAdding, isDisabled, isSaving, isDeleting) => {
-  const {type, timeStart, timeEnd, options} = data;
+const getEventEditTemplate = (data, availableDestinations, availableOptions, availableTypes, isAdding) => {
+  const {type, timeStart, timeEnd, options, isDisabled, isSaving, isDeleting} = data;
   let {price, destination} = data;
 
   // Проверка на существование введенного пункта назначения
@@ -330,16 +330,25 @@ export default class EventEditView extends SmartView {
   static parseEventToData(event) {
     return Object.assign(
         {},
-        event
+        event,
+        {
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false
+        }
     );
   }
 
 
   static parseDatatoEvent(data) {
-    return Object.assign(
+    data = Object.assign(
         {},
         data
     );
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+    return data;
   }
 
 

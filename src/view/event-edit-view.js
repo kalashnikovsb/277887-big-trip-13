@@ -126,7 +126,7 @@ const getCloseButton = (isAdding, isDeleting, isDisabled) => {
     result = `Cancel`;
   }
   if (isDeleting) {
-    result = `Deleting`;
+    result = `Deleting...`;
   }
   return `<button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>${result}</button>`;
 };
@@ -135,7 +135,7 @@ const getCloseButton = (isAdding, isDeleting, isDisabled) => {
 const getSubmitButton = (isFormSubmitDisable, isSaving, isDisabled) => {
   let result = `Save`;
   if (isSaving) {
-    result = `Saving`;
+    result = `Saving...`;
   }
   return `<button class="event__save-btn  btn  btn--blue" type="submit" ${isFormSubmitDisable || isDisabled ? `disabled` : ``}>${result}</button>`;
 };

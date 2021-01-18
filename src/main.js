@@ -117,3 +117,11 @@ tripPresenter.init();
 
 // Блокирую фильтры пока не загрузятся опции и пункты назначения
 filterPresenter.filtersDisable();
+
+
+
+
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});

@@ -8,6 +8,11 @@ const getSyncedEvents = (items) => {
 
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
+
+    if (!current) {
+      return {};
+    }
+
     return Object.assign({}, acc, {
       [current.id]: current,
     });
@@ -79,6 +84,7 @@ export default class Provider {
           // Забираем из ответа синхронизированные задачи
           const createdEvents = getSyncedEvents(response.created);
           const updatedEvents = getSyncedEvents(response.updated);
+
           // Добавляем синхронизированные задачи в хранилище.
           // Хранилище должно быть актуальным в любой момент.
           const items = createStoreStructure([...createdEvents, ...updatedEvents]);

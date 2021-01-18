@@ -13,7 +13,7 @@ self.addEventListener(`install`, (evt) => {
             `/`,
             `/index.html`,
             `/bundle.js`,
-            `/bundle.js.map`,
+            // `/bundle.js.map`,
             `/css/style.css`,
             `/fonts/Montserrat-Bold.woff2`,
             `/fonts/Montserrat-ExtraBold.woff2`,

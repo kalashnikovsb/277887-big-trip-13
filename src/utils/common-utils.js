@@ -27,4 +27,9 @@ const getRandomItems = (array, minLength, maxLength) => {
 };
 
 
-export {getRandomInteger, getRandomElement, getRandomItems};
+const isOnline = () => {
+  return window.navigator.onLine;
+};
+
+
+export {getRandomInteger, getRandomElement, getRandomItems, isOnline};

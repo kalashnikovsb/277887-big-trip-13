@@ -79,7 +79,6 @@ export default class Provider {
           // Забираем из ответа синхронизированные задачи
           const createdEvents = getSyncedEvents(response.created);
           const updatedEvents = getSyncedEvents(response.updated);
-
           // Добавляем синхронизированные задачи в хранилище.
           // Хранилище должно быть актуальным в любой момент.
           const items = createStoreStructure([...createdEvents, ...updatedEvents]);

@@ -134,12 +134,12 @@ const getCloseButton = (isAdding, isDeleting, isDisabled) => {
 };
 
 
-const getSubmitButton = (isFormSubmitDisable, isSaving, isDisabled) => {
+const getSubmitButton = (isSaving, isDisabled) => {
   let result = `Save`;
   if (isSaving) {
     result = `Saving...`;
   }
-  return `<button class="event__save-btn  btn  btn--blue" type="submit" ${isFormSubmitDisable || isDisabled ? `disabled` : ``}>${result}</button>`;
+  return `<button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? `disabled` : ``}>${result}</button>`;
 };
 
 
@@ -160,7 +160,7 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
 
   // Проверка на существование введенного пункта назначения
   if (isDestinationCorrect(destination, availableDestinations) === false) {
-    destination = availableDestinations[0].name;
+    destination = ``;
   }
 
   // Преобразую строку к числу, отсекаю дробную часть
@@ -169,8 +169,6 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
   if (isNaN(price) || price <= 0) {
     price = ``;
   }
-
-  const isFormSubmitDisable = !destination;
 
   // Могут показываться или нет в зависимости от типа события и наличия описания у точки маршрута
   const getOptionsBlock = getOptionsList(type, options, availableOptions, isDisabled);
@@ -192,7 +190,7 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
           <label class="event__label  event__type-output" for="event-destination-1">
             ${getType(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" ${isDisabled ? `disabled` : ``} name="event-destination" value="${he.encode(getDestination(destination))}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" title="Выберите значение из списка" required type="text" ${isDisabled ? `disabled` : ``} name="event-destination" value="${he.encode(getDestination(destination))}" list="destination-list-1">
           ${getDestinationsList(availableDestinations)}
         </div>
 
@@ -211,7 +209,7 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
           </label>
           <input class="event__input event__input--price" ${isDisabled ? `disabled` : ``} id="event-price-1" name="event-price" type="number" min="1" required value="${price}">
         </div>
-        ${getSubmitButton(isFormSubmitDisable, isSaving, isDisabled)}
+        ${getSubmitButton(isSaving, isDisabled)}
         ${getCloseButton(isAdding, isDeleting, isDisabled)}
         ${getTriangleButton(isAdding, isDisabled)}
       </header>
@@ -234,7 +232,7 @@ export default class EventEditView extends SmartView {
 
     if (!!event === false) {
       event = {
-        type: this._types[0],
+        type: this._types[3],
         destination: ``,
         description: ``,
         options: [],
@@ -356,6 +354,11 @@ export default class EventEditView extends SmartView {
 
   _typeChangeHandler(evt) {
     evt.preventDefault();
+    const choosedType = evt.target.value.charAt(0).toUpperCase() + evt.target.value.slice(1);
+    // Если изменен тип ивента то выбранные опции сбрасываются
+    if (choosedType !== this._data.type) {
+      this._data.options = [];
+    }
     this.updateData({
       type: evt.target.value.charAt(0).toUpperCase() + evt.target.value.slice(1)
     });

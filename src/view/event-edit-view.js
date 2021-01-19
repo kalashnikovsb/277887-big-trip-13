@@ -160,7 +160,7 @@ const getEventEditTemplate = (data, availableDestinations, availableOptions, ava
 
   // Проверка на существование введенного пункта назначения
   if (isDestinationCorrect(destination, availableDestinations) === false) {
-    destination = ``;
+    destination = availableDestinations[0].name;
   }
 
   // Преобразую строку к числу, отсекаю дробную часть

@@ -3,17 +3,10 @@ import {isOnline} from "../utils/common-utils.js";
 
 const getSyncedEvents = (items) => {
   return items.filter(({success}) => success)
-    .map(({payload}) => payload.event);
+    .map(({payload}) => payload.point);
 };
 
 const createStoreStructure = (items) => {
-
-
-
-  console.log(items);
-
-
-
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
       [current.id]: current,
@@ -88,14 +81,6 @@ export default class Provider {
           const updatedEvents = getSyncedEvents(response.updated);
           // Добавляем синхронизированные задачи в хранилище.
           // Хранилище должно быть актуальным в любой момент.
-
-
-
-          console.log(createdEvents);
-          console.log(updatedEvents);
-
-
-
           const items = createStoreStructure([...createdEvents, ...updatedEvents]);
 
           this._store.setItems(items);

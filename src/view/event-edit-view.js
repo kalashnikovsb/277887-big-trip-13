@@ -1,4 +1,5 @@
 import {addOrDeleteOption} from "../utils/events-utils.js";
+import {isOnline} from "../utils/common-utils.js";
 import SmartView from "./smart-view.js";
 import dayjs from "dayjs";
 import he from "he";
@@ -79,9 +80,10 @@ const getOptionsList = (type, options, availableOptions, isDisabled) => {
 
 
 const getPhotos = (photos) => {
-  if (Boolean(photos) === false || photos.length === 0) {
+  if (Boolean(photos) === false || photos.length === 0 || !(isOnline())) {
     return ``;
   }
+
   return `<div class="event__photos-container">
     <div class="event__photos-tape">
   ${photos.map((photo) => {

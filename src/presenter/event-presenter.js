@@ -144,6 +144,10 @@ export default class EventPresenter {
 
 
   _eventOpenClickHandler() {
+    if (!isOnline()) {
+      toast(`You can't open event offline`);
+      return;
+    }
     this._replaceEventToEdit();
   }
 
@@ -154,10 +158,6 @@ export default class EventPresenter {
 
 
   _favoriteClickHandler() {
-    if (!isOnline()) {
-      toast(`You can't edit event offline`);
-      return;
-    }
     this._changeData(
         UserAction.UPDATE_EVENT,
         UpdateType.PATCH,
@@ -171,7 +171,7 @@ export default class EventPresenter {
 
   _formSubmitHandler(event) {
     if (!isOnline()) {
-      toast(`You can't edit event offline`);
+      toast(`You can't save event offline`);
       return;
     }
     this._changeData(
@@ -184,7 +184,7 @@ export default class EventPresenter {
 
   _deleteClickHandler(event) {
     if (!isOnline()) {
-      toast(`You can't edit event offline`);
+      toast(`You can't delete event offline`);
       return;
     }
     this._changeData(

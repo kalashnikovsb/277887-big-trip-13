@@ -3,6 +3,8 @@ import {render, replace, remove} from "../utils/render-utils.js";
 import EventEditView from "../view/event-edit-view.js";
 import EventView from "../view/event-view.js";
 import {UserAction, UpdateType} from "../const.js";
+import {isOnline} from "../utils/common-utils.js";
+import {toast} from "../utils/toast/toast.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -80,7 +82,6 @@ export default class EventPresenter {
 
 
   setViewState(state) {
-
     const resetFormState = () => {
       this._eventEditComponent.updateData({
         isDisabled: false,
@@ -143,6 +144,10 @@ export default class EventPresenter {
 
 
   _eventOpenClickHandler() {
+    if (!isOnline()) {
+      toast(`You can't open event offline`);
+      return;
+    }
     this._replaceEventToEdit();
   }
 
@@ -165,6 +170,10 @@ export default class EventPresenter {
 
 
   _formSubmitHandler(event) {
+    if (!isOnline()) {
+      toast(`You can't save event offline`);
+      return;
+    }
     this._changeData(
         UserAction.UPDATE_EVENT,
         UpdateType.MAJOR,
@@ -174,6 +183,10 @@ export default class EventPresenter {
 
 
   _deleteClickHandler(event) {
+    if (!isOnline()) {
+      toast(`You can't delete event offline`);
+      return;
+    }
     this._changeData(
         UserAction.DELETE_EVENT,
         UpdateType.MAJOR,

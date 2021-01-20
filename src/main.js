@@ -67,7 +67,6 @@ const addNewEventClickHandler = (evt) => {
     return;
   }
 
-
   evt.target.disabled = true;
   tripPresenter.createEvent(() => {
     evt.target.disabled = false;

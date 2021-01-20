@@ -54,23 +54,28 @@ const menuClickHandler = (menuItem) => {
 
 const addNewEventClickHandler = (evt) => {
   evt.preventDefault();
-  tripPresenter.show();
 
   if (!isOnline()) {
     toast(`You can't create new event offline`);
-    currentMenuItem = MenuItem.TABLE;
-    menuComponent.setMenuItem(MenuItem.TABLE);
-    filterPresenter.filtersEnable();
-    if (statisticComponent !== null) {
-      statisticComponent.hide();
-    }
+    // currentMenuItem = MenuItem.TABLE;
+    // menuComponent.setMenuItem(MenuItem.TABLE);
+    // filterPresenter.filtersEnable();
+    // if (statisticComponent !== null) {
+    //   statisticComponent.hide();
+    // }
     return;
   }
+
+  //Показываю задачи
+  tripPresenter.show();
 
   evt.target.disabled = true;
   tripPresenter.createEvent(() => {
     evt.target.disabled = false;
   });
+
+  //Удаляю сообщение если оно есть
+  tripPresenter.removeNoEventsNoticeIfExist();
 
   currentMenuItem = MenuItem.TABLE;
   menuComponent.setMenuItem(MenuItem.TABLE);

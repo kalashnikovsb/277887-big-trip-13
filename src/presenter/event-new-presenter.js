@@ -19,12 +19,13 @@ export default class EventNewPresenter {
   }
 
 
-  init(destroyBlankEvent) {
+  init(destroyBlankEvent, showMessage) {
     if (this._eventEditComponent !== null) {
       return;
     }
 
     this._destroyBlankEvent = destroyBlankEvent;
+    this._showMessage = showMessage;
 
     const isAdding = true;
 
@@ -44,6 +45,7 @@ export default class EventNewPresenter {
     }
 
     this._destroyBlankEvent();
+    this._showMessage();
 
     remove(this._eventEditComponent);
     this._eventEditComponent = null;

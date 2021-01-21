@@ -32,6 +32,8 @@ export default class TripPresenter {
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
     this._viewActionHandler = this._viewActionHandler.bind(this);
     this._modelEventHandler = this._modelEventHandler.bind(this);
+    this._getAllEvents = this._getAllEvents.bind(this);
+    this._renderNoEventsNotice = this._renderNoEventsNotice.bind(this);
 
     this._eventsModel.addObserver(this._modelEventHandler);
     this._filterModel.addObserver(this._modelEventHandler);
@@ -90,7 +92,7 @@ export default class TripPresenter {
       this._eventNewPresenter = new EventNewPresenter(this._eventsListComponent, this._viewActionHandler, this._getDestinations(), this._getOptions());
     }
 
-    this._eventNewPresenter.init(this._destroyBlankEvent);
+    this._eventNewPresenter.init(this._destroyBlankEvent, this._renderNoEventsNotice);
   }
 
 
@@ -260,8 +262,11 @@ export default class TripPresenter {
     if (this._noEventsNoticeComponent) {
       return;
     }
-    this._noEventsNoticeComponent = new NoEventsNoticeView();
-    render(this._boardContainerElement, this._noEventsNoticeComponent, RenderPosition.BEFOREEND);
+
+    if (this._getAllEvents().length === 0) {
+      this._noEventsNoticeComponent = new NoEventsNoticeView();
+      render(this._boardContainerElement, this._noEventsNoticeComponent, RenderPosition.BEFOREEND);
+    }
   }
 
 

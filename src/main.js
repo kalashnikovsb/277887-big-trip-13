@@ -57,12 +57,6 @@ const addNewEventClickHandler = (evt) => {
 
   if (!isOnline()) {
     toast(`You can't create new event offline`);
-    // currentMenuItem = MenuItem.TABLE;
-    // menuComponent.setMenuItem(MenuItem.TABLE);
-    // filterPresenter.filtersEnable();
-    // if (statisticComponent !== null) {
-    //   statisticComponent.hide();
-    // }
     return;
   }
 

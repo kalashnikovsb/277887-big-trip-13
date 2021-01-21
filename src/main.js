@@ -66,7 +66,6 @@ const addNewEventClickHandler = (evt) => {
     return;
   }
 
-  //Показываю задачи
   tripPresenter.show();
 
   evt.target.disabled = true;
@@ -74,7 +73,6 @@ const addNewEventClickHandler = (evt) => {
     evt.target.disabled = false;
   });
 
-  //Удаляю сообщение если оно есть
   tripPresenter.removeNoEventsNoticeIfExist();
 
   currentMenuItem = MenuItem.TABLE;

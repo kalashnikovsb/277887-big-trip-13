@@ -251,8 +251,8 @@ export default class StatisticView extends SmartView {
 
 
   _getTypes(availableOptions) {
-    let result = [];
-    for (let type of availableOptions) {
+    const result = [];
+    for (const type of availableOptions) {
       result.push(type.type.slice(0, 1).toUpperCase() + type.type.slice(1));
     }
     return result;

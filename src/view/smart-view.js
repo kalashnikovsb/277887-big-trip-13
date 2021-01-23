@@ -19,7 +19,7 @@ export default class SmartView extends AbstractView {
   }
 
   updateElement() {
-    let prevElement = this.getElement();
+    const prevElement = this.getElement();
     const parent = prevElement.parentElement;
     // Проверка чтобы не было ошибки в хроме
     if (!parent) {

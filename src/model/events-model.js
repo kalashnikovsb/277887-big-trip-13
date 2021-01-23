@@ -134,12 +134,12 @@ export default class EventsModel extends Observer {
 
 
   static adaptDestinationsToClient(destination) {
-    let result = {};
+    const result = {};
     result.name = destination.name;
     result.description = destination.description;
     result.pictures = [];
-    for (let serverPicture of destination.pictures) {
-      let picture = {};
+    for (const serverPicture of destination.pictures) {
+      const picture = {};
       picture.src = serverPicture.src;
       picture.description = serverPicture.description;
       result.pictures.push(picture);
@@ -149,11 +149,11 @@ export default class EventsModel extends Observer {
 
 
   static adaptOptionsToClient(option) {
-    let result = {};
+    const result = {};
     result.type = option.type;
     result.offers = [];
-    for (let serverOffer of option.offers) {
-      let offer = {};
+    for (const serverOffer of option.offers) {
+      const offer = {};
       offer.name = serverOffer.title;
       offer.price = serverOffer.price;
       result.offers.push(offer);

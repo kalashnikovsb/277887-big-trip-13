@@ -266,8 +266,8 @@ export default class EventEditView extends SmartView {
 
 
   getTypes(options) {
-    let result = [];
-    for (let option of options) {
+    const result = [];
+    for (const option of options) {
       result.push(option.type);
     }
     return result;
@@ -367,7 +367,7 @@ export default class EventEditView extends SmartView {
 
   _destinationChangeHandler(evt) {
     evt.preventDefault();
-    let choosedDestination = this._destinations.find((destination) => destination.name === evt.target.value) || {};
+    const choosedDestination = this._destinations.find((destination) => destination.name === evt.target.value) || {};
     this.updateData({
       destination: evt.target.value,
       description: choosedDestination.description,
@@ -378,7 +378,7 @@ export default class EventEditView extends SmartView {
 
   _priceInputHandler(evt) {
     evt.preventDefault();
-    let result = evt.target.value;
+    const result = evt.target.value;
     this.updateData({
       price: result
     });
@@ -391,9 +391,9 @@ export default class EventEditView extends SmartView {
     const optionName = evt.target.dataset.name;
     // Ищу среди всех опций для всех типов ту на которой был сделан клик
     let result = null;
-    for (let option of this._options) {
-      let availableOptions = option.offers;
-      for (let offer of availableOptions) {
+    for (const option of this._options) {
+      const availableOptions = option.offers;
+      for (const offer of availableOptions) {
         if (offer.name === optionName) {
           result = offer;
         }
@@ -426,7 +426,7 @@ export default class EventEditView extends SmartView {
     this.getElement().querySelector(`#event-price-1`).addEventListener(`change`, this._priceInputHandler);
 
     const options = this.getElement().querySelectorAll(`.event__offer-checkbox`);
-    for (let option of options) {
+    for (const option of options) {
       option.addEventListener(`click`, this._optionsChangeHandler);
     }
   }
@@ -466,7 +466,7 @@ export default class EventEditView extends SmartView {
 
 
   _startTimeChangeHandler([timeStart]) {
-    let startMilliseconds = timeStart.getTime();
+    const startMilliseconds = timeStart.getTime();
     let endMilliseconds = this._data.timeEnd.getTime();
     if (endMilliseconds < startMilliseconds) {
       endMilliseconds = startMilliseconds;
@@ -480,7 +480,7 @@ export default class EventEditView extends SmartView {
 
   _endTimeChangeHandler([timeEnd]) {
     let startMilliseconds = this._data.timeStart.getTime();
-    let endMilliseconds = timeEnd.getTime();
+    const endMilliseconds = timeEnd.getTime();
     if (endMilliseconds < startMilliseconds) {
       startMilliseconds = endMilliseconds;
     }

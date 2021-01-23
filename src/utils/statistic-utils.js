@@ -37,7 +37,7 @@ const geteventsCountsByTypes = (types, events) => {
 
 const getDurationsByTypes = (types, events) => {
   const millisecondsInDay = 1000 * 60 * 60 * 24;
-  let eventsDurationsByTypes = [];
+  const eventsDurationsByTypes = [];
 
   types.forEach((type) => {
     let result = 0;

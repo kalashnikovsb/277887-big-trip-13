@@ -1,12 +1,12 @@
 const getClientOptions = (serverOptions) => {
-  let clientOptions = [];
+  const clientOptions = [];
 
   if (serverOptions.length === 0) {
     return clientOptions;
   }
 
-  for (let serverOption of serverOptions) {
-    let clientOption = {
+  for (const serverOption of serverOptions) {
+    const clientOption = {
       name: serverOption.title,
       price: serverOption.price,
     };
@@ -18,14 +18,14 @@ const getClientOptions = (serverOptions) => {
 
 
 const getServerOptions = (clientOptions) => {
-  let serverOptions = [];
+  const serverOptions = [];
 
   if (clientOptions.length === 0) {
     return serverOptions;
   }
 
-  for (let clientOption of clientOptions) {
-    let serverOption = {
+  for (const clientOption of clientOptions) {
+    const serverOption = {
       title: clientOption.name,
       price: clientOption.price,
     };

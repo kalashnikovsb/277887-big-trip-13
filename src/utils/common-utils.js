@@ -18,7 +18,7 @@ const getRandomItems = (array, minLength, maxLength) => {
   if (length === 0) {
     return [];
   }
-  let subArray = [];
+  const subArray = [];
   while (length) {
     subArray.push(getRandomElement(array));
     length--;

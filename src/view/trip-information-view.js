@@ -9,7 +9,7 @@ const getDestinations = (events) => {
   }
   events.sort(sortTimeStartUp);
 
-  let destinations = [];
+  const destinations = [];
   events.forEach((item) => destinations.push(item.destination));
 
   const unique = Array.from(new Set(destinations));
@@ -34,7 +34,7 @@ const getTripDates = (events) => {
     return ``;
   }
 
-  let eventsCopy = events.slice();
+  const eventsCopy = events.slice();
   eventsCopy.sort(sortTimeEndUp);
 
   let startDate = dayjs(eventsCopy[0].timeStart);

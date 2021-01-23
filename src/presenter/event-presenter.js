@@ -153,6 +153,7 @@ export default class EventPresenter {
 
 
   _eventEditCloseClickHandler() {
+    this._eventEditComponent.reset(this._event);
     this._replaceEditToEvent();
   }
 
